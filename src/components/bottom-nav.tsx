@@ -22,14 +22,33 @@ export default function BottomNav() {
     setIsClient(true);
   }, []);
 
+  // On the server, and on the initial client render, render a static version
+  // of the nav bar to prevent a hydration mismatch.
+  if (!isClient) {
+    return (
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 max-w-md items-center justify-around">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <item.icon className="h-6 w-6" strokeWidth={2} />
+              <span className="text-xs font-medium">{item.label}</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
+    );
+  }
+
+  // After the component has mounted on the client, render the dynamic version.
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          // The active state is only calculated on the client after mounting.
-          // This ensures the server render and initial client render are identical, preventing a hydration mismatch.
-          const isActive = isClient && pathname === item.href;
-          
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
