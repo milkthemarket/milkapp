@@ -22,11 +22,32 @@ export default function BottomNav() {
     setIsClient(true);
   }, []);
 
+  // Render a static version on the server and initial client render to prevent hydration mismatch.
+  if (!isClient) {
+    return (
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 max-w-md items-center justify-around">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className='flex flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-foreground'
+            >
+              <item.icon className="h-6 w-6" strokeWidth={2} />
+              <span className="text-xs font-medium">{item.label}</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
+    );
+  }
+
+  // Once mounted on the client, render the dynamic version with the active state.
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          const isActive = isClient && pathname === item.href;
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
