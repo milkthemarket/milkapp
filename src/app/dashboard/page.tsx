@@ -137,20 +137,6 @@ export default function DashboardPage() {
           </div>
           <div>
             <PortfolioChart activeData={activeData} timeframe={timeframe} chartType={chartType} isPositive={isPositive} />
-            <div className="flex justify-center gap-8 my-4">
-              <button
-                className={`text-lg ${account === 'Individual' ? 'font-bold text-white' : 'text-muted-foreground'}`}
-                onClick={() => setAccount('Individual')}
-              >
-                Individual
-              </button>
-              <button
-                className={`text-lg ${account === 'Roth' ? 'font-bold text-white' : 'text-muted-foreground'}`}
-                onClick={() => setAccount('Roth')}
-              >
-                Roth
-              </button>
-            </div>
             <div className="flex items-center gap-2 mt-4">
               <Tabs
                 value={timeframe}
@@ -212,6 +198,20 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex flex-col gap-8 text-white">
+            <div className="flex gap-6 mb-2 mt-6">
+              <button
+                className={`text-lg ${account === 'Individual' ? 'font-bold text-white' : 'text-muted-foreground'}`}
+                onClick={() => setAccount('Individual')}
+              >
+                Individual
+              </button>
+              <button
+                className={`text-lg ${account === 'Roth' ? 'font-bold text-white' : 'text-muted-foreground'}`}
+                onClick={() => setAccount('Roth')}
+              >
+                Roth
+              </button>
+            </div>
            <div className="space-y-4">
               <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-semibold leading-none tracking-tight">Holdings</h2>
