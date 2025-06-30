@@ -16,17 +16,18 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          const isActive = isClient && pathname === item.href;
+          // Defer calculating active state until after client-side hydration
+          const isActive = mounted && pathname === item.href;
           return (
             <Link
               key={item.href}
