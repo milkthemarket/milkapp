@@ -121,9 +121,6 @@ export default function NewsPage() {
             {/* Header */}
             <div className="flex justify-between items-start">
                 <div>
-                    <div className="flex items-center gap-2">
-                        <h2 className="text-sm text-muted-foreground">News Flow</h2>
-                    </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="p-0 h-auto text-3xl font-bold -ml-1">
