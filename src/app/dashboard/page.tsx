@@ -144,7 +144,7 @@ export default function DashboardPage() {
                 className="w-auto"
               >
                 <ScrollArea className="w-full whitespace-nowrap">
-                  <TabsList className="inline-flex w-auto justify-start bg-transparent p-0 text-foreground/70 gap-1 [&>[data-state=active]]:bg-transparent [&>[data-state=active]]:text-foreground [&>[data-state=active]]:font-bold [&>[data-state=active]]:shadow-none">
+                  <TabsList className="inline-flex w-auto justify-start bg-transparent p-0 text-muted-foreground gap-1 [&>[data-state=active]]:bg-transparent [&>[data-state=active]]:text-foreground [&>[data-state=active]]:font-bold [&>[data-state=active]]:shadow-none">
                       <TabsTrigger value="1D" className="px-2 py-1 text-xs uppercase">1D</TabsTrigger>
                       <TabsTrigger value="1W" className="px-2 py-1 text-xs uppercase">1W</TabsTrigger>
                       <TabsTrigger value="1M" className="px-2 py-1 text-xs uppercase">1M</TabsTrigger>
@@ -167,29 +167,14 @@ export default function DashboardPage() {
                 className="w-auto"
               >
                 <TabsList className="bg-transparent p-0 gap-1">
-                  <TabsTrigger value="line" className={cn(
-                    "h-8 w-8 p-1 text-muted-foreground rounded-md",
-                    "data-[state=active]:bg-muted/50",
-                    isPositive && "[&[data-state=active]]:text-chart-positive",
-                    !isPositive && "[&[data-state=active]]:text-chart-negative"
-                  )}>
-                    <LineChart className="h-5 w-5" />
+                  <TabsTrigger value="line" className="h-8 w-8 p-1 text-muted-foreground rounded-md data-[state=active]:bg-transparent data-[state=active]:text-foreground">
+                    <LineChart className="h-5 w-5" strokeWidth={chartType === 'line' ? 2.5 : 2} />
                   </TabsTrigger>
-                  <TabsTrigger value="area" className={cn(
-                    "h-8 w-8 p-1 text-muted-foreground rounded-md",
-                    "data-[state=active]:bg-muted/50",
-                     isPositive && "[&[data-state=active]]:text-chart-positive",
-                    !isPositive && "[&[data-state=active]]:text-chart-negative"
-                  )}>
-                    <AreaChart className="h-5 w-5" />
+                  <TabsTrigger value="area" className="h-8 w-8 p-1 text-muted-foreground rounded-md data-[state=active]:bg-transparent data-[state=active]:text-foreground">
+                    <AreaChart className="h-5 w-5" strokeWidth={chartType === 'area' ? 2.5 : 2} />
                   </TabsTrigger>
-                  <TabsTrigger value="candle" className={cn(
-                    "h-8 w-8 p-1 text-muted-foreground rounded-md",
-                    "data-[state=active]:bg-muted/50",
-                    isPositive && "[&[data-state=active]]:text-chart-positive",
-                    !isPositive && "[&[data-state=active]]:text-chart-negative"
-                  )}>
-                    <CandlestickChart className="h-5 w-5" />
+                  <TabsTrigger value="candle" className="h-8 w-8 p-1 text-muted-foreground rounded-md data-[state=active]:bg-transparent data-[state=active]:text-foreground">
+                    <CandlestickChart className="h-5 w-5" strokeWidth={chartType === 'candle' ? 2.5 : 2} />
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
