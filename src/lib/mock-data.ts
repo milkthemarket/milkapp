@@ -37,23 +37,9 @@ const account2Data: Record<Timeframe, ChartDataPoint[]> = {
     "All": generateChartData(20000, 8 * 365 * 24, 220, 0.025),
 };
 
-const account3Data: Record<Timeframe, ChartDataPoint[]> = {
-    "1D": generateChartData(250100, 24, 200, 0.1),
-    "1W": generateChartData(250000, 7 * 24, 150, 0.05),
-    "1M": generateChartData(248000, 30 * 24, 120, 0.08),
-    "3M": generateChartData(240000, 90 * 24, 250, 0.06),
-    "6M": generateChartData(230000, 180 * 24, 300, 0.05),
-    "YTD": generateChartData(220000, 200 * 24, 350, 0.07),
-    "1Y": generateChartData(200000, 365 * 24, 280, 0.04),
-    "5Y": generateChartData(150000, 5 * 365 * 24, 400, 0.02),
-    "All": generateChartData(120000, 10 * 365 * 24, 450, 0.015),
-};
-
-
 export const accountsData = [
-    { name: "Taxable 5478-8965", data: account1Data },
-    { name: "Roth 3245-7812", data: account2Data },
-    { name: "Trust 7896-4523", data: account3Data },
+    { name: "Individual", data: account1Data },
+    { name: "Roth", data: account2Data },
 ]
 
 export const portfolioBreakdownData = [

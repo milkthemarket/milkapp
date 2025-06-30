@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -13,11 +14,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { AreaChart, CandlestickChart, LineChart, Shield } from "lucide-react";
+import { AreaChart, CandlestickChart, LineChart } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
@@ -27,7 +27,7 @@ export default function DashboardPage() {
     setIsClient(true);
   }, []);
 
-  const [account, setAccount] = useState("Taxable 5478-8965");
+  const [account, setAccount] = useState<'Individual' | 'Roth'>('Individual');
   const [timeframe, setTimeframe] = useState<Timeframe>("1D");
   const [returnType, setReturnType] = useState<'today' | 'total'>('today');
   const [chartType, setChartType] = useState<'line' | 'area' | 'candle'>('line');
@@ -134,31 +134,23 @@ export default function DashboardPage() {
                   {gainLoss.amount} {gainLoss.percent} {gainLoss.label}
                 </p>
               </div>
-               <Select value={account} onValueChange={setAccount}>
-                  <SelectTrigger className="w-auto md:w-[240px]">
-                      <SelectValue placeholder="Select account" />
-                  </SelectTrigger>
-                  <SelectContent>
-                      <SelectItem value="Taxable 5478-8965">Taxable 5478-8965</SelectItem>
-                      <SelectItem value="Roth 3245-7812">Roth 3245-7812</SelectItem>
-                      <SelectItem value="Trust 7896-4523">
-                          <div className="flex items-center justify-between w-full">
-                              <span>Trust 7896-4523</span>
-                              <Tooltip>
-                                  <TooltipTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                      <Shield className="h-4 w-4 text-amber-400 ml-2" />
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                      <p>Managed by your advisor.</p>
-                                  </TooltipContent>
-                              </Tooltip>
-                          </div>
-                      </SelectItem>
-                  </SelectContent>
-              </Select>
           </div>
           <div>
             <PortfolioChart activeData={activeData} timeframe={timeframe} chartType={chartType} isPositive={isPositive} />
+            <div className="flex justify-center gap-8 my-4">
+              <button
+                className={`text-lg ${account === 'Individual' ? 'font-bold text-white' : 'text-muted-foreground'}`}
+                onClick={() => setAccount('Individual')}
+              >
+                Individual
+              </button>
+              <button
+                className={`text-lg ${account === 'Roth' ? 'font-bold text-white' : 'text-muted-foreground'}`}
+                onClick={() => setAccount('Roth')}
+              >
+                Roth
+              </button>
+            </div>
             <div className="flex items-center gap-2 mt-4">
               <Tabs
                 value={timeframe}
