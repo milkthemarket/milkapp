@@ -1,13 +1,13 @@
 'use client'
 
-import { Area, Line, ComposedChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { Area, Line, ComposedChart, CartesianGrid, XAxis, YAxis, TooltipProps } from "recharts"
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart"
 import { useMemo } from "react"
 import { format, parseISO } from "date-fns";
+import type { ValueType, NameType } from "recharts/types/component/DefaultTooltipContent";
 
 export type Timeframe = "1D" | "1W" | "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "All";
 
@@ -29,22 +29,26 @@ export function PortfolioChart({ activeData, timeframe, chartType, isPositive }:
   const gradientColor = useMemo(() => isPositive ? "var(--color-positive)" : "var(--color-negative)", [isPositive]);
 
   const tickFormatter = (date: string) => {
-    switch (timeframe) {
-      case "1D":
-        return format(parseISO(date), "HH:mm");
-      case "1W":
-      case "1M":
-        return format(parseISO(date), "MMM d");
-      case "3M":
-      case "6M":
-      case "YTD":
-      case "1Y":
-         return format(parseISO(date), "MMM");
-      case "5Y":
-      case "All":
-        return format(parseISO(date), "yyyy");
-      default:
-        return format(parseISO(date), "MMM d");
+    try {
+        switch (timeframe) {
+        case "1D":
+            return format(parseISO(date), "HH:mm");
+        case "1W":
+        case "1M":
+            return format(parseISO(date), "MMM d");
+        case "3M":
+        case "6M":
+        case "YTD":
+        case "1Y":
+            return format(parseISO(date), "MMM");
+        case "5Y":
+        case "All":
+            return format(parseISO(date), "yyyy");
+        default:
+            return format(parseISO(date), "MMM d");
+        }
+    } catch {
+        return "";
     }
   };
 
@@ -94,17 +98,24 @@ export function PortfolioChart({ activeData, timeframe, chartType, isPositive }:
             />
             <ChartTooltip
                 cursor={{stroke: "hsl(var(--foreground))", strokeWidth: 1, strokeDasharray: "3 3"}}
-                content={<ChartTooltipContent 
-                    indicator={chartType === 'line' ? 'dot' : 'line'} 
-                    formatter={(value, name) => (
-                      <div className="flex flex-col">
-                        <span className="text-muted-foreground">{format(parseISO(name as string), "MMM d, yyyy, HH:mm")}</span>
-                        <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value as number)}</span>
-                      </div>
-                    )}
-                    labelFormatter={(_, payload) => payload?.[0]?.payload.time}
-                    />
-                }
+                content={({ active, payload }: TooltipProps<ValueType, NameType>) => {
+                    if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                            <div className="rounded-lg border bg-popover p-2 text-popover-foreground shadow-sm">
+                                <div className="grid grid-cols-1 gap-1.5">
+                                     <span className="text-sm text-muted-foreground">
+                                        {format(parseISO(data.time), "MMM d, yyyy, HH:mm")}
+                                     </span>
+                                    <span className="font-bold">
+                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(data.value)}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }
+                    return null;
+                }}
             />
             <defs>
                 <linearGradient id="fillValue" x1="0" y1="0" x2="0" y2="1">
