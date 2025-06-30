@@ -1,7 +1,6 @@
 
 'use client';
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -124,7 +123,6 @@ export default function NewsPage() {
                 <div>
                     <div className="flex items-center gap-2">
                         <h2 className="text-sm text-muted-foreground">News Flow</h2>
-                        <Badge variant="outline" className="text-xs uppercase border-muted-foreground/50 text-muted-foreground">Beta</Badge>
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
