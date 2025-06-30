@@ -6,7 +6,7 @@ import { LayoutGrid, Newspaper, ArrowRightLeft, Bell, User } from 'lucide-react'
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutGrid },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
   { href: '/news', label: 'News', icon: Newspaper },
   { href: '/trade', label: 'Trade', icon: ArrowRightLeft },
   { href: '/alerts', label: 'Alerts', icon: Bell },
