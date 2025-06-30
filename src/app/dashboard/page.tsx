@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { accountsData, portfolioBreakdownData, watchlistData, historyData } from "@/lib/mock-data";
 import { PortfolioChart } from "@/components/portfolio-chart";
 import type { Timeframe } from "@/components/portfolio-chart";
@@ -18,8 +18,15 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const [account, setAccount] = useState("Taxable 5478-8965");
   const [timeframe, setTimeframe] = useState<Timeframe>("1D");
   const [returnType, setReturnType] = useState<'today' | 'total'>('today');
@@ -86,7 +93,29 @@ export default function DashboardPage() {
       Deposit: { color: 'text-chart-positive', sign: '+' },
       Withdrawal: { color: 'text-chart-negative', sign: '-' },
   };
-
+  
+  if (!isClient) {
+    return (
+      <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8">
+        <div className="space-y-4">
+          <div className="flex justify-between items-start">
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-24 bg-muted/50" />
+              <Skeleton className="h-12 w-48 bg-muted/50" />
+              <Skeleton className="h-7 w-64 bg-muted/50" />
+            </div>
+            <Skeleton className="h-10 w-[240px] bg-muted/50" />
+          </div>
+          <div>
+            <Skeleton className="h-[250px] w-full bg-muted/50" />
+            <div className="flex items-center gap-2 mt-4">
+              <Skeleton className="h-8 w-full bg-muted/50" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <TooltipProvider>
