@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -77,7 +76,7 @@ const newsData = [
 ];
 
 const filters = [
-  { name: "Watchlist", hasDropdown: false },
+  { name: "Watchlist", hasDropdown: true },
   { name: "Symbol", hasDropdown: true },
   { name: "Market", hasDropdown: true },
   { name: "Corporate activity", hasDropdown: true },
@@ -119,8 +118,8 @@ export default function NewsPage() {
     return (
         <div className="flex-1 space-y-6 p-4 sm:p-6 bg-background text-foreground">
             {/* Header */}
-            <div className="flex justify-between items-start">
-                <div>
+            <div className="flex justify-between items-center">
+                 <div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="p-0 h-auto text-3xl font-bold -ml-1">
