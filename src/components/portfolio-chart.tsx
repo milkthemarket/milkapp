@@ -28,30 +28,6 @@ export function PortfolioChart({ activeData, timeframe, chartType, isPositive }:
   const chartColor = useMemo(() => isPositive ? "hsl(var(--chart-positive))" : "hsl(var(--chart-negative))", [isPositive]);
   const gradientColor = useMemo(() => isPositive ? "var(--color-positive)" : "var(--color-negative)", [isPositive]);
 
-  const tickFormatter = (date: string) => {
-    try {
-        switch (timeframe) {
-        case "1D":
-            return format(parseISO(date), "HH:mm");
-        case "1W":
-        case "1M":
-            return format(parseISO(date), "MMM d");
-        case "3M":
-        case "6M":
-        case "YTD":
-        case "1Y":
-            return format(parseISO(date), "MMM");
-        case "5Y":
-        case "All":
-            return format(parseISO(date), "yyyy");
-        default:
-            return format(parseISO(date), "MMM d");
-        }
-    } catch {
-        return "";
-    }
-  };
-
   return (
       <ChartContainer 
         config={{
@@ -84,9 +60,7 @@ export function PortfolioChart({ activeData, timeframe, chartType, isPositive }:
                 dataKey="time"
                 tickLine={false}
                 axisLine={false}
-                tickMargin={8}
-                tickFormatter={tickFormatter}
-                style={{ fontSize: '12px' }}
+                tick={false}
             />
             <YAxis
                 tickLine={false}
