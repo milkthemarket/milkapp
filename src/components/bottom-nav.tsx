@@ -15,6 +15,24 @@ const navItems = [
   { href: '/account', label: 'Account', icon: SlothIcon },
 ];
 
+const SpeedBump = () => (
+    <svg
+      className="absolute top-0 left-0 w-full h-4 text-white/20"
+      viewBox="0 0 375 16"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 15 L147.5 15 C167.5 0, 207.5 0, 227.5 15 L375 15"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+    </svg>
+);
+
+
 export default function BottomNav() {
   const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
@@ -24,16 +42,18 @@ export default function BottomNav() {
   }, []);
 
   if (!isClient) {
+    // Render a placeholder on the server to avoid hydration errors
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 h-24 border-t border-border/50 bg-background/80 backdrop-blur-sm">
-            <div className="mx-auto flex h-full max-w-md items-center justify-around" />
+        <nav className="fixed bottom-0 left-0 right-0 z-50 h-24 bg-background/80 backdrop-blur-sm">
+            <div className="mx-auto flex h-full max-w-md items-end justify-around pb-4" />
         </nav>
     );
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
-      <div className="mx-auto flex h-24 max-w-md items-center justify-around">
+    <nav className="relative fixed bottom-0 left-0 right-0 z-50 h-24 bg-background/80 backdrop-blur-sm">
+      <SpeedBump />
+      <div className="mx-auto flex h-full max-w-md items-end justify-around pb-4">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           
@@ -43,12 +63,12 @@ export default function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground',
-                  isActive && 'text-primary font-bold'
+                  'flex flex-col items-center justify-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground',
+                  isActive && 'text-primary'
                 )}
               >
-                <item.icon className="h-12 w-12" strokeWidth={isActive ? 2.5 : 2} />
-                <span className="text-lg font-medium">{item.label}</span>
+                <item.icon className="h-10 w-10" strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-base font-medium">{item.label}</span>
               </Link>
             )
           }
@@ -59,7 +79,7 @@ export default function BottomNav() {
               href={item.href}
               className={cn(
                 'flex flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-foreground',
-                isActive && 'text-primary font-bold'
+                isActive && 'text-primary'
               )}
             >
               <item.icon className="h-6 w-6" strokeWidth={isActive ? 2.5 : 2} />
