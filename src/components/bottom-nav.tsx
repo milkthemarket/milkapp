@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutGrid, Newspaper, Compass, ArrowRightLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
 import { SlothIcon } from '@/components/sloth-icon';
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
@@ -17,25 +17,17 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setIsClient(true);
   }, []);
-
-  if (!mounted) {
-    return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-border/50 bg-background/80 backdrop-blur-sm">
-            <div className="mx-auto flex h-full max-w-md items-center justify-around" />
-        </nav>
-    );
-  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+          const isActive = isClient ? pathname.startsWith(item.href) : false;
           
           if (item.href === '/trade') {
             return (
