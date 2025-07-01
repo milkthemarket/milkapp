@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
-import { accountsData, portfolioBreakdownData, watchlistData, historyData } from "@/lib/mock-data";
+import { accountsData, watchlistData, historyData } from "@/lib/mock-data";
 import { PortfolioChart } from "@/components/portfolio-chart";
 import type { Timeframe } from "@/components/portfolio-chart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PortfolioDistribution } from "@/components/portfolio-distribution";
 
 export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
@@ -288,17 +289,7 @@ export default function DashboardPage() {
             </ul>
           </div>
 
-           <div className="space-y-4">
-              <h2 className="text-2xl font-semibold leading-none tracking-tight">Asset Allocation</h2>
-              <ul className="space-y-2 text-sm">
-                {portfolioBreakdownData.map((assetClass) => (
-                  <li key={assetClass.name} className="flex justify-between">
-                    <span className="text-muted-foreground">{assetClass.name}</span>
-                    <span className="font-medium">{assetClass.percentage}%</span>
-                  </li>
-                ))}
-              </ul>
-          </div>
+          <PortfolioDistribution />
 
           <div className="space-y-4">
               <h2 className="text-2xl font-semibold leading-none tracking-tight">History</h2>

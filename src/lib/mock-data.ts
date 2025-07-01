@@ -1,3 +1,4 @@
+
 import type { Timeframe, ChartDataPoint } from "@/components/portfolio-chart";
 
 function generateChartData(base: number, points: number, volatility: number, trend: number): ChartDataPoint[] {
@@ -42,13 +43,9 @@ export const accountsData = [
     { name: "Roth", data: account2Data },
 ]
 
-export const portfolioBreakdownData = [
-  { name: 'U.S. Large Cap', percentage: 40 },
-  { name: 'U.S. Mid Cap', percentage: 15 },
-  { name: 'U.S. Small Cap', percentage: 5 },
-  { name: 'International Developed', percentage: 25 },
-  { name: 'International Emerging', percentage: 10 },
-  { name: 'Bonds', percentage: 5 },
+export const portfolioDistributionData = [
+  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: 'hsl(var(--chart-1))' },
+  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: 'hsl(var(--chart-2))' },
 ];
 
 export const watchlistData = [
