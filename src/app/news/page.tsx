@@ -189,7 +189,7 @@ export default function NewsPage() {
                 <TabsContent value="my-alerts" className="mt-0">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold tracking-tight">Manage Alerts</h2>
-                        <Button>
+                        <Button variant="outline">
                             <Plus className="mr-2 h-4 w-4" />
                             New Alert
                         </Button>
@@ -201,7 +201,7 @@ export default function NewsPage() {
                                     <li key={alert.id} className="flex items-center justify-between p-4">
                                         <div className="flex items-center gap-4">
                                             <div className="bg-muted p-3 rounded-full">
-                                                <Bell className="h-5 w-5 text-primary" />
+                                                <Bell className="h-5 w-5 text-foreground" />
                                             </div>
                                             <div>
                                                 <p className="font-semibold">{alert.asset} {alert.condition}</p>
@@ -210,7 +210,7 @@ export default function NewsPage() {
                                                 </p>
                                             </div>
                                         </div>
-                                        <Switch defaultChecked={alert.active} />
+                                        <Switch defaultChecked={alert.active} className="data-[state=checked]:bg-muted-foreground" />
                                     </li>
                                 ))}
                             </ul>
