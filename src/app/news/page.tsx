@@ -97,10 +97,10 @@ const filters = [
   { name: "Priority", hasDropdown: true },
 ];
 
-const sentimentColors: Record<Sentiment, string> = {
-    Positive: 'text-chart-positive',
-    Negative: 'text-chart-negative',
-    Neutral: 'text-muted-foreground',
+const sentimentBadgeClasses: Record<Sentiment, string> = {
+    Positive: 'bg-chart-positive/20 text-chart-positive',
+    Negative: 'bg-chart-negative/20 text-chart-negative',
+    Neutral: 'bg-muted/50 text-muted-foreground',
 };
 
 const FilterButton = ({ filter }: { filter: { name: string, hasDropdown: boolean } }) => {
@@ -186,7 +186,10 @@ export default function NewsPage() {
                                     <Link href="#" className="font-medium hover:underline truncate block">{item.headline}</Link>
                                 </TableCell>
                                 <TableCell>
-                                    <span className={cn('font-medium text-sm', sentimentColors[item.sentiment])}>
+                                    <span className={cn(
+                                        'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium', 
+                                        sentimentBadgeClasses[item.sentiment]
+                                    )}>
                                         {item.sentiment}
                                     </span>
                                 </TableCell>
@@ -209,7 +212,10 @@ export default function NewsPage() {
                     <Link href="#" className="font-medium hover:underline text-sm leading-tight block mb-1.5">{item.headline}</Link>
                     <div className="flex items-center justify-between text-xs">
                         <p className="text-muted-foreground">{item.provider}</p>
-                        <span className={cn('font-medium', sentimentColors[item.sentiment])}>
+                        <span className={cn(
+                            'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
+                            sentimentBadgeClasses[item.sentiment]
+                        )}>
                             {item.sentiment}
                         </span>
                     </div>
