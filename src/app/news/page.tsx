@@ -161,6 +161,15 @@ export default function NewsPage() {
 
                     {/* News List */}
                     <div className="border-t border-border/50">
+                      {/* Desktop Headers */}
+                      <div className="hidden md:flex items-center gap-x-4 p-4 border-b border-border/50 font-semibold text-sm text-muted-foreground">
+                          <span className="w-16">Time</span>
+                          <span className="w-20">Symbol</span>
+                          <span className="flex-1">Headline</span>
+                          <span className="w-24 text-center">Sentiment</span>
+                          <span className="w-8 text-center">Alerts</span>
+                          <span className="w-24 text-center">Provider</span>
+                      </div>
                       <div className="divide-y divide-border/50">
                         {newsData.map((item) => (
                           <div key={item.id}>
@@ -176,7 +185,7 @@ export default function NewsPage() {
                                     </Button>
                                 </div>
                                 <Link href="#" className="font-medium hover:underline text-base leading-snug block">{item.headline}</Link>
-                                <div className="pt-1">
+                                <div className="flex items-center justify-between pt-1">
                                     <Badge
                                         className={cn(
                                             'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
@@ -186,6 +195,7 @@ export default function NewsPage() {
                                     >
                                         {item.sentiment}
                                     </Badge>
+                                    <span className="text-sm text-muted-foreground">{item.provider}</span>
                                 </div>
                             </div>
                             {/* Desktop View */}
@@ -195,7 +205,7 @@ export default function NewsPage() {
                                 <Link href="#" className="font-medium hover:underline text-base leading-snug truncate flex-1">
                                     {item.headline}
                                 </Link>
-                                <div className="flex items-center gap-x-4">
+                                <div className="w-24 flex justify-center">
                                     <Badge
                                         className={cn(
                                             'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
@@ -205,10 +215,13 @@ export default function NewsPage() {
                                     >
                                         {item.sentiment}
                                     </Badge>
+                                </div>
+                                <div className="w-8 flex justify-center">
                                     <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                                         <Bell className="h-5 w-5" />
                                     </Button>
                                 </div>
+                                <span className="text-sm text-muted-foreground w-24 text-center">{item.provider}</span>
                             </div>
                           </div>
                         ))}
