@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -23,11 +24,17 @@ export default function BottomNav() {
     setIsClient(true);
   }, []);
 
+  // To prevent hydration errors, we only render the navigation on the client
+  // where we can safely access the current pathname.
+  if (!isClient) {
+    return null;
+  }
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          const isActive = isClient ? pathname.startsWith(item.href) : false;
+          const isActive = pathname.startsWith(item.href);
           
           if (item.href === '/trade') {
             return (
