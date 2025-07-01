@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import ClientOnly from "@/components/client-only";
 
 type Sentiment = 'Positive' | 'Negative' | 'Neutral';
 
@@ -140,7 +141,6 @@ const filters = [
   { name: "Market", hasDropdown: true },
   { name: "Corporate activity", hasDropdown: true },
   { name: "Region", hasDropdown: true },
-  { name: "Provider", hasDropdown: true },
   { name: "Priority", hasDropdown: true },
 ];
 
@@ -182,152 +182,154 @@ export default function NewsPage() {
     const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
     return (
-        <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
-            <Tabs defaultValue="full-feed" className="w-full space-y-6">
-                <div className="flex justify-between items-center">
-                     <h1 className="text-3xl font-bold">News</h1>
-                    <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
-                        <TabsTrigger value="full-feed" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Full Feed</TabsTrigger>
-                        <TabsTrigger value="my-alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">My Alerts</TabsTrigger>
-                    </TabsList>
-                </div>
-                
-                <TabsContent value="full-feed" className="mt-0 space-y-6">
-                    <div className="flex flex-wrap gap-2">
-                        {filters.map((filter) => (
-                            <FilterButton key={filter.name} filter={filter} />
-                        ))}
+        <ClientOnly>
+            <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
+                <Tabs defaultValue="full-feed" className="w-full space-y-6">
+                    <div className="flex justify-between items-center">
+                        <h1 className="text-3xl font-bold">News</h1>
+                        <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
+                            <TabsTrigger value="full-feed" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Full Feed</TabsTrigger>
+                            <TabsTrigger value="my-alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">My Alerts</TabsTrigger>
+                        </TabsList>
                     </div>
-
-                    <div className="border-t border-border/50">
-                      <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto_auto_auto] items-center gap-x-4 p-4 border-b border-border/50 font-semibold text-sm text-muted-foreground">
-                          <span className="w-16">Time</span>
-                          <span className="w-20">Symbol</span>
-                          <span>Headline</span>
-                          <span className="w-24 text-center">Sentiment</span>
-                          <span className="w-24 text-center">Provider</span>
-                          <span className="w-8 text-center">Alerts</span>
-                      </div>
-                      <div className="divide-y divide-border/50">
-                        {newsData.map((item) => (
-                          <div key={item.id} onClick={() => setSelectedNews(item)} className="cursor-pointer hover:bg-muted/30">
-                            <div className="p-4 space-y-2 md:hidden">
-                                <div className="flex justify-between items-center text-sm">
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-muted-foreground">{item.timeAgo}</span>
-                                        <span className="font-bold">{item.symbol}</span>
-                                    </div>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground -mr-2">
-                                        <Bell className="h-5 w-5" />
-                                    </Button>
-                                </div>
-                                <div className="font-medium text-base leading-snug block">{item.headline}</div>
-                                <div className="flex items-center justify-between pt-1">
-                                    <Badge
-                                        className={cn(
-                                            'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
-                                            sentimentBadgeClasses[item.sentiment]
-                                        )}
-                                        variant="outline"
-                                    >
-                                        {item.sentiment}
-                                    </Badge>
-                                    <span className="text-sm text-muted-foreground">{item.provider}</span>
-                                </div>
-                            </div>
-                            <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto_auto_auto] items-center gap-x-4 p-4">
-                                <span className="text-muted-foreground text-sm whitespace-nowrap w-16">{item.timeAgo}</span>
-                                <span className="font-bold text-sm w-20">{item.symbol}</span>
-                                <div className="font-medium text-base leading-snug truncate flex-1">
-                                    {item.headline}
-                                </div>
-                                <div className="w-24 flex justify-center">
-                                    <Badge
-                                        className={cn(
-                                            'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
-                                            sentimentBadgeClasses[item.sentiment]
-                                        )}
-                                        variant="outline"
-                                    >
-                                        {item.sentiment}
-                                    </Badge>
-                                </div>
-                                <span className="text-sm text-muted-foreground w-24 text-center">{item.provider}</span>
-                                <div className="w-8 flex justify-center">
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                                        <Bell className="h-5 w-5" />
-                                    </Button>
-                                </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="my-alerts" className="mt-0">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-2xl font-bold tracking-tight">Manage Alerts</h2>
-                        <Button variant="outline">
-                            <Plus className="mr-2 h-4 w-4" />
-                            New Alert
-                        </Button>
-                    </div>
-                    <Card className="mt-4 bg-card">
-                        <CardContent className="p-0">
-                            <ul className="divide-y divide-border">
-                                {alertsData.map((alert) => (
-                                    <li key={alert.id} className="flex items-center justify-between p-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className="bg-muted p-3 rounded-full">
-                                                <Bell className="h-5 w-5 text-foreground" />
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold">{alert.asset} {alert.condition}</p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {alert.active ? "Active" : "Inactive"}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <Switch defaultChecked={alert.active} className="data-[state=checked]:bg-muted-foreground" />
-                                    </li>
-                                ))}
-                            </ul>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-            </Tabs>
-            <Dialog open={!!selectedNews} onOpenChange={(isOpen) => !isOpen && setSelectedNews(null)}>
-                <DialogContent className="bg-card/80 border-none shadow-none max-w-2xl text-foreground p-6 sm:p-8">
-                    {selectedNews && (
-                        <div className="flex flex-col gap-4">
-                            <DialogHeader>
-                                <DialogTitle className="text-2xl lg:text-3xl font-bold leading-tight">{selectedNews.headline}</DialogTitle>
-                            </DialogHeader>
-                            <div className="flex items-center gap-4 py-2 border-b border-t border-border/50">
-                                <Badge variant="secondary" className="font-bold text-base py-1 px-3">{selectedNews.symbol}</Badge>
-                                <div className="text-xl font-semibold">
-                                    ${selectedNews.price.toFixed(2)}
-                                </div>
-                                <div className={cn(
-                                    "text-base font-medium flex items-center gap-1",
-                                    selectedNews.change >= 0 ? 'text-chart-positive' : 'text-chart-negative'
-                                )}>
-                                    {selectedNews.change >= 0 ? '▲' : '▼'}
-                                    <span>{selectedNews.change >= 0 ? '+' : ''}{selectedNews.change.toFixed(2)}</span>
-                                    <span>({selectedNews.change >= 0 ? '+' : ''}{selectedNews.changePercent.toFixed(2)}%)</span>
-                                </div>
-                            </div>
-                            <div className="text-muted-foreground leading-relaxed max-h-[50vh] overflow-y-auto pr-2">
-                                {selectedNews.content}
-                            </div>
-                            <DialogFooter className="!justify-end mt-4">
-                                <Button variant="outline" onClick={() => setSelectedNews(null)}>Close</Button>
-                            </DialogFooter>
+                    
+                    <TabsContent value="full-feed" className="mt-0 space-y-6">
+                        <div className="flex flex-wrap gap-2">
+                            {filters.map((filter) => (
+                                <FilterButton key={filter.name} filter={filter} />
+                            ))}
                         </div>
-                    )}
-                </DialogContent>
-            </Dialog>
-        </div>
+
+                        <div className="border-t border-border/50">
+                        <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto_auto_auto] items-center gap-x-4 p-4 border-b border-border/50 font-semibold text-sm text-muted-foreground">
+                            <span>Time</span>
+                            <span>Symbol</span>
+                            <span>Headline</span>
+                            <span className="text-center">Sentiment</span>
+                            <span className="text-center">Provider</span>
+                            <span className="text-center">Alerts</span>
+                        </div>
+                        <div className="divide-y divide-border/50">
+                            {newsData.map((item) => (
+                            <div key={item.id} onClick={() => setSelectedNews(item)} className="cursor-pointer hover:bg-muted/30">
+                                <div className="p-4 space-y-2 md:hidden">
+                                    <div className="flex justify-between items-center text-sm">
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-muted-foreground">{item.timeAgo}</span>
+                                            <span className="font-bold">{item.symbol}</span>
+                                        </div>
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground -mr-2">
+                                            <Bell className="h-5 w-5" />
+                                        </Button>
+                                    </div>
+                                    <div className="font-medium text-base leading-snug block">{item.headline}</div>
+                                    <div className="flex items-center justify-between pt-1">
+                                        <Badge
+                                            className={cn(
+                                                'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
+                                                sentimentBadgeClasses[item.sentiment]
+                                            )}
+                                            variant="outline"
+                                        >
+                                            {item.sentiment}
+                                        </Badge>
+                                        <span className="text-sm text-muted-foreground">{item.provider}</span>
+                                    </div>
+                                </div>
+                                <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto_auto_auto] items-center gap-x-4 p-4">
+                                    <span className="text-muted-foreground text-sm whitespace-nowrap w-16">{item.timeAgo}</span>
+                                    <span className="font-bold text-sm w-20">{item.symbol}</span>
+                                    <div className="font-medium text-base leading-snug truncate flex-1">
+                                        {item.headline}
+                                    </div>
+                                    <div className="w-24 flex justify-center">
+                                        <Badge
+                                            className={cn(
+                                                'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
+                                                sentimentBadgeClasses[item.sentiment]
+                                            )}
+                                            variant="outline"
+                                        >
+                                            {item.sentiment}
+                                        </Badge>
+                                    </div>
+                                    <span className="text-sm text-muted-foreground w-24 text-center">{item.provider}</span>
+                                    <div className="w-8 flex justify-center">
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                                            <Bell className="h-5 w-5" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                            ))}
+                        </div>
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="my-alerts" className="mt-0">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-2xl font-bold tracking-tight">Manage Alerts</h2>
+                            <Button variant="outline">
+                                <Plus className="mr-2 h-4 w-4" />
+                                New Alert
+                            </Button>
+                        </div>
+                        <Card className="mt-4 bg-card">
+                            <CardContent className="p-0">
+                                <ul className="divide-y divide-border">
+                                    {alertsData.map((alert) => (
+                                        <li key={alert.id} className="flex items-center justify-between p-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="bg-muted p-3 rounded-full">
+                                                    <Bell className="h-5 w-5 text-foreground" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold">{alert.asset} {alert.condition}</p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {alert.active ? "Active" : "Inactive"}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <Switch defaultChecked={alert.active} className="data-[state=checked]:bg-muted-foreground" />
+                                        </li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
+                <Dialog open={!!selectedNews} onOpenChange={(isOpen) => !isOpen && setSelectedNews(null)}>
+                    <DialogContent className="bg-card/80 border-none shadow-none max-w-2xl text-foreground p-6 sm:p-8">
+                        {selectedNews && (
+                            <div className="flex flex-col gap-4">
+                                <DialogHeader>
+                                    <DialogTitle className="text-2xl lg:text-3xl font-bold leading-tight">{selectedNews.headline}</DialogTitle>
+                                </DialogHeader>
+                                <div className="flex items-center gap-4 py-2 border-b border-t border-border/50">
+                                    <Badge variant="secondary" className="font-bold text-base py-1 px-3">{selectedNews.symbol}</Badge>
+                                    <div className="text-xl font-semibold">
+                                        ${selectedNews.price.toFixed(2)}
+                                    </div>
+                                    <div className={cn(
+                                        "text-base font-medium flex items-center gap-1",
+                                        selectedNews.change >= 0 ? 'text-chart-positive' : 'text-chart-negative'
+                                    )}>
+                                        {selectedNews.change >= 0 ? '▲' : '▼'}
+                                        <span>{selectedNews.change >= 0 ? '+' : ''}{selectedNews.change.toFixed(2)}</span>
+                                        <span>({selectedNews.change >= 0 ? '+' : ''}{selectedNews.changePercent.toFixed(2)}%)</span>
+                                    </div>
+                                </div>
+                                <div className="text-muted-foreground leading-relaxed max-h-[50vh] overflow-y-auto pr-2">
+                                    {selectedNews.content}
+                                </div>
+                                <DialogFooter className="!justify-end mt-4">
+                                    <Button variant="outline" onClick={() => setSelectedNews(null)}>Close</Button>
+                                </DialogFooter>
+                            </div>
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </div>
+        </ClientOnly>
     );
 }
