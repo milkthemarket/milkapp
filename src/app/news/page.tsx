@@ -15,14 +15,27 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-const newsData = [
+type Sentiment = 'Positive' | 'Negative' | 'Neutral';
+
+interface NewsItem {
+  id: number;
+  timeAgo: string;
+  symbol: string;
+  headline: string;
+  provider: string;
+  sentiment: Sentiment;
+}
+
+const newsData: NewsItem[] = [
     {
       id: 1,
       timeAgo: '1 minute ago',
       symbol: 'TSLA',
       headline: 'Tesla shares slump as deliveries miss estimates for the fourth quarter',
       provider: 'Reuters',
+      sentiment: 'Negative',
     },
     {
       id: 2,
@@ -30,6 +43,7 @@ const newsData = [
       symbol: 'AAPL',
       headline: 'Apple Vision Pro sets launch date for February 2nd, pre-orders to open soon',
       provider: 'Bloomberg',
+      sentiment: 'Positive',
     },
     {
       id: 3,
@@ -37,6 +51,7 @@ const newsData = [
       symbol: 'MSFT',
       headline: 'Microsoft to invest $2.9 billion in Japan for AI and cloud infrastructure expansion',
       provider: 'CNBC',
+      sentiment: 'Positive',
     },
     {
       id: 4,
@@ -44,6 +59,7 @@ const newsData = [
       symbol: 'GOOGL',
       headline: 'Google announces new AI features for its Workspace suite to compete with Microsoft Copilot',
       provider: 'The Verge',
+      sentiment: 'Neutral',
     },
     {
       id: 5,
@@ -51,6 +67,7 @@ const newsData = [
       symbol: 'AMZN',
       headline: 'Amazon\'s AWS unit announces price cuts for several key cloud services',
       provider: 'TechCrunch',
+      sentiment: 'Positive',
     },
     {
         id: 6,
@@ -58,6 +75,7 @@ const newsData = [
         symbol: 'NVDA',
         headline: 'Nvidia unveils new line of GPUs targeted at AI professionals and researchers',
         provider: 'MarketWatch',
+        sentiment: 'Positive',
     },
     {
         id: 7,
@@ -65,6 +83,7 @@ const newsData = [
         symbol: 'META',
         headline: 'Meta to roll out new privacy features for Facebook and Instagram users in Europe',
         provider: 'Reuters',
+        sentiment: 'Neutral',
     }
 ];
 
@@ -78,6 +97,12 @@ const filters = [
   { name: "Provider", hasDropdown: true },
   { name: "Priority", hasDropdown: true },
 ];
+
+const sentimentColors: Record<Sentiment, string> = {
+    Positive: 'text-chart-positive',
+    Negative: 'text-chart-negative',
+    Neutral: 'text-muted-foreground',
+};
 
 const FilterButton = ({ filter }: { filter: { name: string, hasDropdown: boolean } }) => {
     const buttonContent = (
@@ -147,6 +172,7 @@ export default function NewsPage() {
                             <TableHead className="w-[150px] font-bold text-foreground h-10">Time</TableHead>
                             <TableHead className="w-[120px] font-bold text-foreground h-10">Symbol</TableHead>
                             <TableHead className="font-bold text-foreground h-10">Headline</TableHead>
+                            <TableHead className="w-[120px] font-bold text-foreground h-10">Sentiment</TableHead>
                             <TableHead className="text-right w-[150px] font-bold text-foreground h-10">Provider</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -159,6 +185,11 @@ export default function NewsPage() {
                                 </TableCell>
                                 <TableCell className="max-w-sm lg:max-w-md xl:max-w-lg">
                                     <Link href="#" className="font-medium hover:underline truncate block">{item.headline}</Link>
+                                </TableCell>
+                                <TableCell>
+                                    <span className={cn('font-medium text-sm', sentimentColors[item.sentiment])}>
+                                        {item.sentiment}
+                                    </span>
                                 </TableCell>
                                 <TableCell className="text-right text-muted-foreground text-xs">{item.provider}</TableCell>
                             </TableRow>
@@ -177,7 +208,12 @@ export default function NewsPage() {
                         <span className="text-muted-foreground text-xs ml-auto">{item.timeAgo}</span>
                     </div>
                     <Link href="#" className="font-medium hover:underline text-sm leading-tight block mb-1.5">{item.headline}</Link>
-                    <p className="text-muted-foreground text-xs">{item.provider}</p>
+                    <div className="flex items-center justify-between text-xs">
+                        <p className="text-muted-foreground">{item.provider}</p>
+                        <span className={cn('font-medium', sentimentColors[item.sentiment])}>
+                            {item.sentiment}
+                        </span>
+                    </div>
                   </div>
                 ))}
               </div>
