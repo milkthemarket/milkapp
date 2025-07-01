@@ -1,20 +1,25 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
-  DropdownMenuCheckboxItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
+  DropdownMenuItem, 
   DropdownMenuTrigger,
-  DropdownMenuItem
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus, Bell } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 type Sentiment = 'Positive' | 'Negative' | 'Neutral';
 
@@ -86,6 +91,13 @@ const newsData: NewsItem[] = [
     }
 ];
 
+const alertsData = [
+    { id: 1, asset: 'BTC', condition: 'moves > 5%', active: true },
+    { id: 2, asset: 'ETH', condition: 'is above $4,000', active: true },
+    { id: 3, asset: 'DOGE', condition: 'is below $0.10', active: false },
+    { id: 4, asset: 'News', condition: 'for TSLA', active: true },
+];
+
 const filters = [
   { name: "Watchlist", hasDropdown: true },
   { name: "Symbol", hasDropdown: true },
@@ -98,9 +110,9 @@ const filters = [
 ];
 
 const sentimentBadgeClasses: Record<Sentiment, string> = {
-    Positive: 'bg-chart-positive/20 text-chart-positive',
-    Negative: 'bg-chart-negative/20 text-chart-negative',
-    Neutral: 'bg-muted/50 text-muted-foreground',
+    Positive: 'bg-green-900/50 text-green-400 border border-green-400/30',
+    Negative: 'bg-red-900/50 text-red-400 border border-red-400/30',
+    Neutral: 'bg-muted/50 text-muted-foreground border border-muted-foreground/30',
 };
 
 const FilterButton = ({ filter }: { filter: { name: string, hasDropdown: boolean } }) => {
@@ -153,76 +165,123 @@ export default function NewsPage() {
                 </div>
             </div>
 
-            {/* Filters */}
-            <ScrollArea className="w-full">
-                <div className="flex gap-2 pb-4">
-                    {filters.map((filter) => (
-                        <FilterButton key={filter.name} filter={filter} />
-                    ))}
-                </div>
-                <ScrollBar orientation="horizontal" className="invisible" />
-            </ScrollArea>
+            <Tabs defaultValue="full-feed" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="full-feed">Full Feed</TabsTrigger>
+                    <TabsTrigger value="my-alerts">My Alerts</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="full-feed" className="mt-6 space-y-6">
+                    {/* Filters */}
+                    <ScrollArea className="w-full">
+                        <div className="flex gap-2 pb-4">
+                            {filters.map((filter) => (
+                                <FilterButton key={filter.name} filter={filter} />
+                            ))}
+                        </div>
+                        <ScrollBar orientation="horizontal" className="invisible" />
+                    </ScrollArea>
 
-            {/* News Table (Desktop) */}
-            <div className="hidden md:block border-t border-border/50">
-                <Table>
-                    <TableHeader>
-                        <TableRow className="hover:bg-transparent border-b-0">
-                            <TableHead className="w-[100px] font-bold text-foreground h-10">Time</TableHead>
-                            <TableHead className="w-[120px] font-bold text-foreground h-10">Symbol</TableHead>
-                            <TableHead className="font-bold text-foreground h-10">Headline</TableHead>
-                            <TableHead className="w-[120px] font-bold text-foreground h-10">Sentiment</TableHead>
-                            <TableHead className="text-right w-[150px] font-bold text-foreground h-10">Provider</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
+                    {/* News Table (Desktop) */}
+                    <div className="hidden md:block border-t border-border/50">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="hover:bg-transparent border-b-0">
+                                    <TableHead className="w-[100px] font-bold text-foreground h-10">Time</TableHead>
+                                    <TableHead className="w-[120px] font-bold text-foreground h-10">Symbol</TableHead>
+                                    <TableHead className="font-bold text-foreground h-10">Headline</TableHead>
+                                    <TableHead className="w-[120px] font-bold text-foreground h-10">Sentiment</TableHead>
+                                    <TableHead className="text-right w-[150px] font-bold text-foreground h-10">Provider</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {newsData.map((item) => (
+                                    <TableRow key={item.id} className="border-border/50">
+                                        <TableCell className="text-muted-foreground text-xs">{item.timeAgo}</TableCell>
+                                        <TableCell>
+                                            <span className="font-bold text-sm">{item.symbol}</span>
+                                        </TableCell>
+                                        <TableCell className="max-w-sm lg:max-w-md xl:max-w-lg">
+                                            <Link href="#" className="font-medium hover:underline truncate block">{item.headline}</Link>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge
+                                                className={cn(
+                                                    'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium', 
+                                                    sentimentBadgeClasses[item.sentiment]
+                                                )}
+                                                variant="outline"
+                                            >
+                                                {item.sentiment}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right text-muted-foreground text-xs">{item.provider}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                    
+                    {/* News List (Mobile) */}
+                    <div className="md:hidden border-t border-border/50">
+                      <div className="divide-y divide-border/50">
                         {newsData.map((item) => (
-                            <TableRow key={item.id} className="border-border/50">
-                                <TableCell className="text-muted-foreground text-xs">{item.timeAgo}</TableCell>
-                                <TableCell>
-                                    <span className="font-bold text-sm">{item.symbol}</span>
-                                </TableCell>
-                                <TableCell className="max-w-sm lg:max-w-md xl:max-w-lg">
-                                    <Link href="#" className="font-medium hover:underline truncate block">{item.headline}</Link>
-                                </TableCell>
-                                <TableCell>
-                                    <span className={cn(
-                                        'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium', 
+                          <div key={item.id} className="py-4">
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="font-bold text-sm">{item.symbol}</span>
+                                <span className="text-muted-foreground text-xs ml-auto">{item.timeAgo}</span>
+                            </div>
+                            <Link href="#" className="font-medium hover:underline text-sm leading-tight block mb-1.5">{item.headline}</Link>
+                            <div className="flex items-center justify-between text-xs">
+                                <p className="text-muted-foreground">{item.provider}</p>
+                                <Badge
+                                    className={cn(
+                                        'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
                                         sentimentBadgeClasses[item.sentiment]
-                                    )}>
-                                        {item.sentiment}
-                                    </span>
-                                </TableCell>
-                                <TableCell className="text-right text-muted-foreground text-xs">{item.provider}</TableCell>
-                            </TableRow>
+                                    )}
+                                    variant="outline"
+                                >
+                                    {item.sentiment}
+                                </Badge>
+                            </div>
+                          </div>
                         ))}
-                    </TableBody>
-                </Table>
-            </div>
-            
-            {/* News List (Mobile) */}
-            <div className="md:hidden border-t border-border/50">
-              <div className="divide-y divide-border/50">
-                {newsData.map((item) => (
-                  <div key={item.id} className="py-4">
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="font-bold text-sm">{item.symbol}</span>
-                        <span className="text-muted-foreground text-xs ml-auto">{item.timeAgo}</span>
+                      </div>
                     </div>
-                    <Link href="#" className="font-medium hover:underline text-sm leading-tight block mb-1.5">{item.headline}</Link>
-                    <div className="flex items-center justify-between text-xs">
-                        <p className="text-muted-foreground">{item.provider}</p>
-                        <span className={cn(
-                            'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
-                            sentimentBadgeClasses[item.sentiment]
-                        )}>
-                            {item.sentiment}
-                        </span>
+                </TabsContent>
+
+                <TabsContent value="my-alerts" className="mt-6">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-2xl font-bold tracking-tight">Manage Alerts</h2>
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" />
+                            New Alert
+                        </Button>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+                    <Card className="mt-4 bg-card">
+                        <CardContent className="p-0">
+                            <ul className="divide-y divide-border">
+                                {alertsData.map((alert) => (
+                                    <li key={alert.id} className="flex items-center justify-between p-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="bg-muted p-3 rounded-full">
+                                                <Bell className="h-5 w-5 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">{alert.asset} {alert.condition}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {alert.active ? "Active" : "Inactive"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <Switch defaultChecked={alert.active} />
+                                    </li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }

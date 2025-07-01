@@ -1,18 +1,19 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, Newspaper, Compass, ArrowRightLeft, Bell, User } from 'lucide-react';
+import { LayoutGrid, Newspaper, Compass, ArrowRightLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
+import { SlothIcon } from './sloth-icon';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
   { href: '/explore', label: 'Explore', icon: Compass },
   { href: '/news', label: 'News', icon: Newspaper },
   { href: '/trade', label: 'Trade', icon: ArrowRightLeft },
-  { href: '/alerts', label: 'Alerts', icon: Bell },
-  { href: '/account', label: 'Account', icon: User },
+  { href: '/account', label: 'Account', icon: SlothIcon },
 ];
 
 export default function BottomNav() {
@@ -27,7 +28,7 @@ export default function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          const isActive = mounted && pathname === item.href;
+          const isActive = mounted && pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
