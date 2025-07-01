@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, Newspaper, ArrowRightLeft, Bell, User } from 'lucide-react';
+import { LayoutGrid, Newspaper, Compass, ArrowRightLeft, Bell, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+  { href: '/explore', label: 'Explore', icon: Compass },
   { href: '/news', label: 'News', icon: Newspaper },
   { href: '/trade', label: 'Trade', icon: ArrowRightLeft },
   { href: '/alerts', label: 'Alerts', icon: Bell },
