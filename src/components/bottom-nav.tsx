@@ -2,34 +2,25 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, CandlestickChart, ArrowRightLeft, ClipboardList, Compass } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Compass,
+  ArrowRightLeft,
+  Newspaper,
+  User,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
 
 const navItems = [
-  { href: '/dashboard', label: 'Home', icon: Home },
-  { href: '/explore', label: 'Investing', icon: CandlestickChart },
-  { href: '/trade', label: 'Transact', icon: ArrowRightLeft },
-  { href: '/news', label: 'Planning', icon: ClipboardList },
-  { href: '/account', label: 'Discover', icon: Compass },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/explore', label: 'Explore', icon: Compass },
+  { href: '/trade', label: 'Trade', icon: ArrowRightLeft },
+  { href: '/news', label: 'News', icon: Newspaper },
+  { href: '/account', label: 'Account', icon: User },
 ];
 
 export default function BottomNav() {
-  const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    // Render a placeholder on the server to avoid hydration errors
-    return (
-        <nav className="fixed bottom-0 left-0 right-0 z-[999] h-20 border-t border-border/50 bg-background">
-            <div className="mx-auto flex h-full max-w-md items-center justify-around" />
-        </nav>
-    );
-  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[999] h-20 border-t border-border/50 bg-background/80 backdrop-blur-sm">
