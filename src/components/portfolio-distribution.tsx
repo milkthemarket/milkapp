@@ -18,17 +18,11 @@ export function PortfolioDistribution() {
       <h2 className="text-2xl font-semibold leading-none tracking-tight">Portfolio distribution</h2>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="bg-transparent p-0 justify-start gap-4 border-b border-white/10 rounded-none h-auto">
-          <TabsTrigger value="assets" className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-full data-[state=active]:bg-muted data-[state=active]:text-foreground data-[state=active]:shadow-none">
-            Assets
-          </TabsTrigger>
           <TabsTrigger value="asset-types" className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-full data-[state=active]:bg-muted data-[state=active]:text-foreground data-[state=active]:shadow-none">
             Asset types
           </TabsTrigger>
           <TabsTrigger value="sectors" className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-full data-[state=active]:bg-muted data-[state=active]:text-foreground data-[state=active]:shadow-none">
             Sectors
-          </TabsTrigger>
-          <TabsTrigger value="currency" className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-full data-[state=active]:bg-muted data-[state=active]:text-foreground data-[state=active]:shadow-none">
-            Currency
           </TabsTrigger>
         </TabsList>
         <TabsContent value="asset-types" className="mt-6">
@@ -117,14 +111,8 @@ export function PortfolioDistribution() {
             </div>
           </div>
         </TabsContent>
-        <TabsContent value="assets">
-          <div className="text-center text-muted-foreground py-16">Assets view is not implemented yet.</div>
-        </TabsContent>
         <TabsContent value="sectors">
           <div className="text-center text-muted-foreground py-16">Sectors view is not implemented yet.</div>
-        </TabsContent>
-        <TabsContent value="currency">
-          <div className="text-center text-muted-foreground py-16">Currency view is not implemented yet.</div>
         </TabsContent>
       </Tabs>
     </div>
