@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -51,6 +51,9 @@ export default function TradePage() {
                             <TradeForm action="Sell" />
                         </TabsContent>
                     </CardContent>
+                    <CardFooter>
+                        <Button variant="outline" className="w-full">Explore</Button>
+                    </CardFooter>
                 </Card>
             </Tabs>
         </div>
