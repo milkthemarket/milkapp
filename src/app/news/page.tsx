@@ -100,7 +100,6 @@ const filters = [
   { name: "Symbol", hasDropdown: true },
   { name: "Market", hasDropdown: true },
   { name: "Corporate activity", hasDropdown: true },
-  { name: "Economics", hasDropdown: true },
   { name: "Region", hasDropdown: true },
   { name: "Provider", hasDropdown: true },
   { name: "Priority", hasDropdown: true },
