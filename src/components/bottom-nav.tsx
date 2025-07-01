@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -16,8 +17,8 @@ const navItems = [
 ];
 
 export default function BottomNav() {
-  const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setIsClient(true);
@@ -43,12 +44,12 @@ export default function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative -top-2 flex flex-col items-center justify-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground',
+                  'relative -top-3 flex flex-col items-center justify-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground',
                   isActive && 'text-primary font-bold'
                 )}
               >
-                <item.icon className="h-10 w-10" strokeWidth={isActive ? 2.5 : 2} />
-                <span className="text-base font-medium">{item.label}</span>
+                <item.icon className="h-12 w-12" strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-lg font-medium">{item.label}</span>
               </Link>
             )
           }

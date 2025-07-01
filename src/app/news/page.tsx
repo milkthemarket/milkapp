@@ -5,13 +5,11 @@ import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
-  DropdownMenuItem, 
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronDown, Plus, Bell } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -144,90 +142,34 @@ const FilterButton = ({ filter }: { filter: { name: string, hasDropdown: boolean
 
 export default function NewsPage() {
     return (
-        <div className="flex-1 space-y-6 p-4 sm:p-6 bg-background text-foreground">
-            {/* Header */}
-            <div className="flex justify-between items-center">
-                 <div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="p-0 h-auto text-3xl font-bold -ml-1">
-                            Full feed
-                            <ChevronDown className="ml-2 h-6 w-6" />
-                        </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start">
-                            <DropdownMenuItem>Full feed</DropdownMenuItem>
-                            <DropdownMenuItem>Watchlist feed</DropdownMenuItem>
-                            <DropdownMenuItem>Portfolio feed</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+        <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
+            <Tabs defaultValue="full-feed" className="w-full space-y-6">
+                <div className="flex justify-between items-center">
+                    <h1 className="text-3xl font-bold">Full feed</h1>
+                    <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
+                        <TabsTrigger value="full-feed" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Full Feed</TabsTrigger>
+                        <TabsTrigger value="my-alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">My Alerts</TabsTrigger>
+                    </TabsList>
                 </div>
-            </div>
-
-            <Tabs defaultValue="full-feed" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="full-feed">Full Feed</TabsTrigger>
-                    <TabsTrigger value="my-alerts">My Alerts</TabsTrigger>
-                </TabsList>
                 
-                <TabsContent value="full-feed" className="mt-6 space-y-6">
+                <TabsContent value="full-feed" className="mt-0 space-y-6">
                     {/* Filters */}
-                    <div className="flex flex-wrap gap-2 pb-4">
+                    <div className="flex flex-wrap gap-2">
                         {filters.map((filter) => (
                             <FilterButton key={filter.name} filter={filter} />
                         ))}
                     </div>
 
-                    {/* News Table (Desktop) */}
-                    <div className="hidden md:block border-t border-border/50">
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="hover:bg-transparent border-b-0">
-                                    <TableHead className="w-[100px] font-bold text-foreground h-10">Time</TableHead>
-                                    <TableHead className="w-[120px] font-bold text-foreground h-10">Symbol</TableHead>
-                                    <TableHead className="font-bold text-foreground h-10">Headline</TableHead>
-                                    <TableHead className="w-[120px] font-bold text-foreground h-10">Sentiment</TableHead>
-                                    <TableHead className="text-right w-[150px] font-bold text-foreground h-10">Provider</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {newsData.map((item) => (
-                                    <TableRow key={item.id} className="border-border/50">
-                                        <TableCell className="text-muted-foreground text-xs">{item.timeAgo}</TableCell>
-                                        <TableCell>
-                                            <span className="font-bold text-sm">{item.symbol}</span>
-                                        </TableCell>
-                                        <TableCell className="max-w-sm lg:max-w-md xl:max-w-lg">
-                                            <Link href="#" className="font-medium hover:underline truncate block">{item.headline}</Link>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                className={cn(
-                                                    'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium', 
-                                                    sentimentBadgeClasses[item.sentiment]
-                                                )}
-                                                variant="outline"
-                                            >
-                                                {item.sentiment}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right text-muted-foreground text-xs">{item.provider}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
-                    
-                    {/* News List (Mobile) */}
-                    <div className="md:hidden border-t border-border/50">
+                    {/* News List */}
+                    <div className="border-t border-border/50">
                       <div className="divide-y divide-border/50">
                         {newsData.map((item) => (
                           <div key={item.id} className="p-4 space-y-2">
-                            <div className="flex justify-between items-baseline">
-                                <span className="font-bold text-sm">{item.symbol}</span>
-                                <span className="text-muted-foreground text-xs">{item.timeAgo}</span>
+                            <div className="flex justify-between items-baseline text-sm">
+                                <span className="font-bold">{item.symbol}</span>
+                                <span className="text-muted-foreground">{item.timeAgo}</span>
                             </div>
-                            <Link href="#" className="font-medium hover:underline text-base leading-snug block">{item.headline}</Link>
+                            <Link href="#" className="font-medium hover:underline text-base leading-snug block my-1">{item.headline}</Link>
                             <div className="pt-1">
                                 <Badge
                                     className={cn(
@@ -245,7 +187,7 @@ export default function NewsPage() {
                     </div>
                 </TabsContent>
 
-                <TabsContent value="my-alerts" className="mt-6">
+                <TabsContent value="my-alerts" className="mt-0">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold tracking-tight">Manage Alerts</h2>
                         <Button>
