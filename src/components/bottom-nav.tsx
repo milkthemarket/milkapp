@@ -2,17 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, Newspaper, Compass, ArrowRightLeft } from 'lucide-react';
+import { Home, CandlestickChart, ArrowRightLeft, ClipboardList, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SlothIcon } from '@/components/sloth-icon';
 import { useEffect, useState } from 'react';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
-  { href: '/explore', label: 'Explore', icon: Compass },
-  { href: '/trade', label: 'Trade', icon: ArrowRightLeft },
-  { href: '/news', label: 'News', icon: Newspaper },
-  { href: '/account', label: 'Account', icon: SlothIcon },
+  { href: '/dashboard', label: 'Home', icon: Home },
+  { href: '/explore', label: 'Investing', icon: CandlestickChart },
+  { href: '/trade', label: 'Transact', icon: ArrowRightLeft },
+  { href: '/news', label: 'Planning', icon: ClipboardList },
+  { href: '/account', label: 'Discover', icon: Compass },
 ];
 
 const SpeedBump = () => (
@@ -57,19 +56,23 @@ export default function BottomNav() {
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           
-          if (item.href === '/trade') {
+          if (item.label === 'Transact') {
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center text-muted-foreground transition-colors hover:text-foreground',
-                   'w-1/5 h-full pt-2',
-                  isActive && 'text-primary'
+                  'relative -top-5 flex flex-col items-center justify-center gap-1.5 transition-all',
+                   isActive ? 'text-primary' : 'text-muted-foreground'
                 )}
               >
-                <item.icon className="h-10 w-10" strokeWidth={isActive ? 2.5 : 2} />
-                <span className="text-base font-medium">{item.label}</span>
+                <div className={cn(
+                    "flex h-16 w-16 items-center justify-center rounded-full bg-primary shadow-lg shadow-primary/30",
+                    "transition-all ring-4 ring-background"
+                )}>
+                  <item.icon className="h-8 w-8 text-primary-foreground" strokeWidth={2.5} />
+                </div>
+                <span className="text-xs font-medium">{item.label}</span>
               </Link>
             )
           }
