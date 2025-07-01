@@ -11,8 +11,8 @@ import { SlothIcon } from './sloth-icon';
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
   { href: '/explore', label: 'Explore', icon: Compass },
-  { href: '/news', label: 'News', icon: Newspaper },
   { href: '/trade', label: 'Trade', icon: ArrowRightLeft },
+  { href: '/news', label: 'News', icon: Newspaper },
   { href: '/account', label: 'Account', icon: SlothIcon },
 ];
 
@@ -29,6 +29,24 @@ export default function BottomNav() {
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
           const isActive = mounted && pathname.startsWith(item.href);
+          
+          if (item.href === '/trade') {
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-label={item.label}
+                className={cn(
+                  'relative -top-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105',
+                  isActive && 'ring-2 ring-primary-foreground/50 ring-offset-4 ring-offset-primary'
+                )}
+              >
+                <item.icon className="h-8 w-8" strokeWidth={2.5} />
+                <span className="sr-only">{item.label}</span>
+              </Link>
+            )
+          }
+
           return (
             <Link
               key={item.href}
