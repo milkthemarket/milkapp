@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -26,7 +25,7 @@ export default function BottomNav() {
 
   if (!isClient) {
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 h-24 border-t border-border/50 bg-background/80 backdrop-blur-sm">
             <div className="mx-auto flex h-full max-w-md items-center justify-around" />
         </nav>
     );
@@ -34,7 +33,7 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-md items-center justify-around">
+      <div className="mx-auto flex h-24 max-w-md items-center justify-around">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           
@@ -44,7 +43,7 @@ export default function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative -top-3 flex flex-col items-center justify-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground',
+                  'flex flex-col items-center justify-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground',
                   isActive && 'text-primary font-bold'
                 )}
               >
