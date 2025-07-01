@@ -144,7 +144,7 @@ export default function NewsPage() {
         <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
             <Tabs defaultValue="full-feed" className="w-full space-y-6">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">News</h1>
+                     <h1 className="text-3xl font-bold">News</h1>
                     <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
                         <TabsTrigger value="full-feed" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Full Feed</TabsTrigger>
                         <TabsTrigger value="my-alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">My Alerts</TabsTrigger>
@@ -163,22 +163,52 @@ export default function NewsPage() {
                     <div className="border-t border-border/50">
                       <div className="divide-y divide-border/50">
                         {newsData.map((item) => (
-                          <div key={item.id} className="p-4 space-y-2">
-                            <div className="flex justify-between items-baseline text-sm">
-                                <span className="font-bold">{item.symbol}</span>
-                                <span className="text-muted-foreground">{item.timeAgo}</span>
+                          <div key={item.id}>
+                            {/* Mobile View */}
+                            <div className="p-4 space-y-2 md:hidden">
+                                <div className="flex justify-between items-center text-sm">
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-muted-foreground">{item.timeAgo}</span>
+                                        <span className="font-bold">{item.symbol}</span>
+                                    </div>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground -mr-2">
+                                        <Bell className="h-5 w-5" />
+                                    </Button>
+                                </div>
+                                <Link href="#" className="font-medium hover:underline text-base leading-snug block">{item.headline}</Link>
+                                <div className="pt-1">
+                                    <Badge
+                                        className={cn(
+                                            'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
+                                            sentimentBadgeClasses[item.sentiment]
+                                        )}
+                                        variant="outline"
+                                    >
+                                        {item.sentiment}
+                                    </Badge>
+                                </div>
                             </div>
-                            <Link href="#" className="font-medium hover:underline text-base leading-snug block my-1">{item.headline}</Link>
-                            <div className="pt-1">
-                                <Badge
-                                    className={cn(
-                                        'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
-                                        sentimentBadgeClasses[item.sentiment]
-                                    )}
-                                    variant="outline"
-                                >
-                                    {item.sentiment}
-                                </Badge>
+                            {/* Desktop View */}
+                            <div className="hidden md:flex items-center gap-x-4 p-4">
+                                <span className="text-muted-foreground text-sm whitespace-nowrap w-16">{item.timeAgo}</span>
+                                <span className="font-bold text-sm w-20">{item.symbol}</span>
+                                <Link href="#" className="font-medium hover:underline text-base leading-snug truncate flex-1">
+                                    {item.headline}
+                                </Link>
+                                <div className="flex items-center gap-x-4">
+                                    <Badge
+                                        className={cn(
+                                            'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
+                                            sentimentBadgeClasses[item.sentiment]
+                                        )}
+                                        variant="outline"
+                                    >
+                                        {item.sentiment}
+                                    </Badge>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                                        <Bell className="h-5 w-5" />
+                                    </Button>
+                                </div>
                             </div>
                           </div>
                         ))}
