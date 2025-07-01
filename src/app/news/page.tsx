@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronDown, Plus, Bell } from "lucide-react";
 import Link from "next/link";
@@ -173,14 +172,11 @@ export default function NewsPage() {
                 
                 <TabsContent value="full-feed" className="mt-6 space-y-6">
                     {/* Filters */}
-                    <ScrollArea className="w-full">
-                        <div className="flex gap-2 pb-4">
-                            {filters.map((filter) => (
-                                <FilterButton key={filter.name} filter={filter} />
-                            ))}
-                        </div>
-                        <ScrollBar orientation="horizontal" className="invisible" />
-                    </ScrollArea>
+                    <div className="flex flex-wrap gap-2 pb-4">
+                        {filters.map((filter) => (
+                            <FilterButton key={filter.name} filter={filter} />
+                        ))}
+                    </div>
 
                     {/* News Table (Desktop) */}
                     <div className="hidden md:block border-t border-border/50">
@@ -226,14 +222,13 @@ export default function NewsPage() {
                     <div className="md:hidden border-t border-border/50">
                       <div className="divide-y divide-border/50">
                         {newsData.map((item) => (
-                          <div key={item.id} className="py-4">
-                            <div className="flex items-center gap-2 mb-2">
+                          <div key={item.id} className="p-4 space-y-2">
+                            <div className="flex justify-between items-baseline">
                                 <span className="font-bold text-sm">{item.symbol}</span>
-                                <span className="text-muted-foreground text-xs ml-auto">{item.timeAgo}</span>
+                                <span className="text-muted-foreground text-xs">{item.timeAgo}</span>
                             </div>
-                            <Link href="#" className="font-medium hover:underline text-sm leading-tight block mb-1.5">{item.headline}</Link>
-                            <div className="flex items-center justify-between text-xs">
-                                <p className="text-muted-foreground">{item.provider}</p>
+                            <Link href="#" className="font-medium hover:underline text-base leading-snug block">{item.headline}</Link>
+                            <div className="pt-1">
                                 <Badge
                                     className={cn(
                                         'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',

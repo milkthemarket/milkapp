@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { LayoutGrid, Newspaper, Compass, ArrowRightLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SlothIcon } from '@/components/sloth-icon';
+import { useEffect, useState } from 'react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
@@ -16,6 +17,19 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+        <nav className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+            <div className="mx-auto flex h-full max-w-md items-center justify-around" />
+        </nav>
+    );
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
@@ -29,12 +43,12 @@ export default function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground',
-                  isActive && 'text-foreground font-bold'
+                  'relative -top-2 flex flex-col items-center justify-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground',
+                  isActive && 'text-primary font-bold'
                 )}
               >
-                <item.icon className="h-8 w-8" strokeWidth={isActive ? 2.5 : 2} />
-                <span className="text-sm font-medium">{item.label}</span>
+                <item.icon className="h-10 w-10" strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-base font-medium">{item.label}</span>
               </Link>
             )
           }
@@ -45,7 +59,7 @@ export default function BottomNav() {
               href={item.href}
               className={cn(
                 'flex flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-foreground',
-                isActive && 'text-foreground font-bold'
+                isActive && 'text-primary font-bold'
               )}
             >
               <item.icon className="h-6 w-6" strokeWidth={isActive ? 2.5 : 2} />
