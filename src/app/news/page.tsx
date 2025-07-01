@@ -167,8 +167,8 @@ export default function NewsPage() {
                           <span className="w-20">Symbol</span>
                           <span className="flex-1">Headline</span>
                           <span className="w-24 text-center">Sentiment</span>
-                          <span className="w-8 text-center">Alerts</span>
                           <span className="w-24 text-center">Provider</span>
+                          <span className="w-8 text-center">Alerts</span>
                       </div>
                       <div className="divide-y divide-border/50">
                         {newsData.map((item) => (
@@ -216,12 +216,12 @@ export default function NewsPage() {
                                         {item.sentiment}
                                     </Badge>
                                 </div>
+                                <span className="text-sm text-muted-foreground w-24 text-center">{item.provider}</span>
                                 <div className="w-8 flex justify-center">
                                     <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                                         <Bell className="h-5 w-5" />
                                     </Button>
                                 </div>
-                                <span className="text-sm text-muted-foreground w-24 text-center">{item.provider}</span>
                             </div>
                           </div>
                         ))}
