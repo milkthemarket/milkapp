@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,7 @@ interface NewsItem {
 const newsData: NewsItem[] = [
     {
       id: 1,
-      timeAgo: '1 minute ago',
+      timeAgo: '1 Min.',
       symbol: 'TSLA',
       headline: 'Tesla shares slump as deliveries miss estimates for the fourth quarter',
       provider: 'Reuters',
@@ -39,7 +38,7 @@ const newsData: NewsItem[] = [
     },
     {
       id: 2,
-      timeAgo: '5 minutes ago',
+      timeAgo: '5 Min.',
       symbol: 'AAPL',
       headline: 'Apple Vision Pro sets launch date for February 2nd, pre-orders to open soon',
       provider: 'Bloomberg',
@@ -47,7 +46,7 @@ const newsData: NewsItem[] = [
     },
     {
       id: 3,
-      timeAgo: '15 minutes ago',
+      timeAgo: '15 Min.',
       symbol: 'MSFT',
       headline: 'Microsoft to invest $2.9 billion in Japan for AI and cloud infrastructure expansion',
       provider: 'CNBC',
@@ -55,7 +54,7 @@ const newsData: NewsItem[] = [
     },
     {
       id: 4,
-      timeAgo: '30 minutes ago',
+      timeAgo: '30 Min.',
       symbol: 'GOOGL',
       headline: 'Google announces new AI features for its Workspace suite to compete with Microsoft Copilot',
       provider: 'The Verge',
@@ -63,7 +62,7 @@ const newsData: NewsItem[] = [
     },
     {
       id: 5,
-      timeAgo: '1 hour ago',
+      timeAgo: '1 H.',
       symbol: 'AMZN',
       headline: 'Amazon\'s AWS unit announces price cuts for several key cloud services',
       provider: 'TechCrunch',
@@ -71,7 +70,7 @@ const newsData: NewsItem[] = [
     },
     {
         id: 6,
-        timeAgo: '2 hours ago',
+        timeAgo: '2 H.',
         symbol: 'NVDA',
         headline: 'Nvidia unveils new line of GPUs targeted at AI professionals and researchers',
         provider: 'MarketWatch',
@@ -79,7 +78,7 @@ const newsData: NewsItem[] = [
     },
     {
         id: 7,
-        timeAgo: '3 hours ago',
+        timeAgo: '3 H.',
         symbol: 'META',
         headline: 'Meta to roll out new privacy features for Facebook and Instagram users in Europe',
         provider: 'Reuters',
@@ -169,7 +168,7 @@ export default function NewsPage() {
                 <Table>
                     <TableHeader>
                         <TableRow className="hover:bg-transparent border-b-0">
-                            <TableHead className="w-[150px] font-bold text-foreground h-10">Time</TableHead>
+                            <TableHead className="w-[100px] font-bold text-foreground h-10">Time</TableHead>
                             <TableHead className="w-[120px] font-bold text-foreground h-10">Symbol</TableHead>
                             <TableHead className="font-bold text-foreground h-10">Headline</TableHead>
                             <TableHead className="w-[120px] font-bold text-foreground h-10">Sentiment</TableHead>
