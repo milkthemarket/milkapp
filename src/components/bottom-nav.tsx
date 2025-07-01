@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -45,14 +44,13 @@ export default function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                aria-label={item.label}
                 className={cn(
-                  'relative -top-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105',
-                  isActive && 'ring-2 ring-primary-foreground/50 ring-offset-4 ring-offset-primary'
+                  'flex flex-col items-center justify-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground',
+                  isActive && 'text-foreground font-bold'
                 )}
               >
-                <item.icon className="h-8 w-8" strokeWidth={2.5} />
-                <span className="sr-only">{item.label}</span>
+                <item.icon className="h-8 w-8" strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-sm font-medium">{item.label}</span>
               </Link>
             )
           }
