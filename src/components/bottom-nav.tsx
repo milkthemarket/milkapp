@@ -17,14 +17,14 @@ const navItems = [
 
 const SpeedBump = () => (
     <svg
-      className="absolute top-0 left-0 w-full h-4 text-white/20"
+      className="absolute top-0 left-1/2 -translate-x-1/2 w-[160%] h-4 text-border/50"
       viewBox="0 0 375 16"
       preserveAspectRatio="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
       <path
-        d="M0 15 L147.5 15 C167.5 0, 207.5 0, 227.5 15 L375 15"
+        d="M0 15 C0 15, 147.5 15, 147.5 15 C167.5 0, 207.5 0, 227.5 15 C227.5 15, 375 15, 375 15"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
@@ -44,14 +44,14 @@ export default function BottomNav() {
   if (!isClient) {
     // Render a placeholder on the server to avoid hydration errors
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 h-24 bg-background/80 backdrop-blur-sm">
+        <nav className="fixed bottom-0 left-0 right-0 z-[999] h-24 bg-background/80 backdrop-blur-sm">
             <div className="mx-auto flex h-full max-w-md items-end justify-around pb-4" />
         </nav>
     );
   }
 
   return (
-    <nav className="relative fixed bottom-0 left-0 right-0 z-50 h-24 bg-background/80 backdrop-blur-sm">
+    <nav className="fixed bottom-0 left-0 right-0 z-[999] h-24 bg-background/80 backdrop-blur-sm">
       <SpeedBump />
       <div className="mx-auto flex h-full max-w-md items-end justify-around pb-4">
         {navItems.map((item) => {
@@ -63,7 +63,8 @@ export default function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground',
+                  'flex flex-col items-center justify-center text-muted-foreground transition-colors hover:text-foreground',
+                   'w-1/5 h-full pt-2',
                   isActive && 'text-primary'
                 )}
               >
@@ -79,6 +80,7 @@ export default function BottomNav() {
               href={item.href}
               className={cn(
                 'flex flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-foreground',
+                'w-1/5 h-full pt-2',
                 isActive && 'text-primary'
               )}
             >
