@@ -34,16 +34,16 @@ function TradeForm({ action }: { action: 'Buy' | 'Sell' }) {
 
 export default function TradePage() {
     return (
-        <div className="flex-1 p-4 sm:p-6 flex justify-center items-center">
-            <Tabs defaultValue="buy" className="w-full max-w-md">
-                <Card className="shadow-lg">
+        <div className="flex-1 p-4 sm:p-6 flex justify-center">
+            <Tabs defaultValue="buy" className="w-full max-w-md flex">
+                <Card className="shadow-lg flex flex-col w-full">
                     <CardHeader>
                         <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="buy">Buy</TabsTrigger>
                             <TabsTrigger value="sell">Sell</TabsTrigger>
                         </TabsList>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex-grow">
                         <TabsContent value="buy">
                             <TradeForm action="Buy" />
                         </TabsContent>
