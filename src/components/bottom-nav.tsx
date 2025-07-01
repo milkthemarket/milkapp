@@ -24,9 +24,13 @@ export default function BottomNav() {
   }, []);
 
   if (!mounted) {
-    // Return null to avoid hydration errors.
-    // The component will only render on the client side after mounting.
-    return null;
+    // Return a placeholder to prevent hydration errors.
+    // This ensures the space is reserved but content depending on client-state isn't rendered on server.
+    return (
+        <nav className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+            <div className="mx-auto flex h-full max-w-md items-center justify-around" />
+        </nav>
+    );
   }
 
   return (
