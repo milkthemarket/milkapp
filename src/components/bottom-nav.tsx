@@ -24,11 +24,21 @@ export default function BottomNav() {
     setMounted(true);
   }, []);
 
+  if (!mounted) {
+    // Return a placeholder or null to avoid hydration errors
+    // This ensures the server and initial client render are identical.
+    return (
+        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+            <div className="mx-auto flex h-16 max-w-md items-center justify-around" />
+        </nav>
+    );
+  }
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          const isActive = mounted && pathname.startsWith(item.href);
+          const isActive = pathname.startsWith(item.href);
           
           if (item.href === '/trade') {
             return (
