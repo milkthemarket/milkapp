@@ -144,7 +144,7 @@ export default function NewsPage() {
         <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
             <Tabs defaultValue="full-feed" className="w-full space-y-6">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">Full feed</h1>
+                    <h1 className="text-3xl font-bold">News</h1>
                     <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
                         <TabsTrigger value="full-feed" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Full Feed</TabsTrigger>
                         <TabsTrigger value="my-alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">My Alerts</TabsTrigger>
