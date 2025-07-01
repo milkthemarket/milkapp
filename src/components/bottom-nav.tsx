@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -6,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { LayoutGrid, Newspaper, Compass, ArrowRightLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SlothIcon } from '@/components/sloth-icon';
-import { useState, useEffect } from 'react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
@@ -18,17 +16,6 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  // To prevent hydration errors, we only render the navigation on the client
-  // where we can safely access the current pathname.
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/80 backdrop-blur-sm">

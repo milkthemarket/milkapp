@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import BottomNav from '@/components/bottom-nav';
+import ClientOnly from '@/components/client-only';
 
 export const metadata: Metadata = {
   title: 'SLOTH App',
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <div className="relative flex min-h-screen flex-col bg-background">
           <main className="flex-1 pb-24">{children}</main>
-          <BottomNav />
+          <ClientOnly>
+            <BottomNav />
+          </ClientOnly>
         </div>
         <Toaster />
       </body>
