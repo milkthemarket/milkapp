@@ -13,7 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { topGainersData, topLosersData, mostActiveData } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const filters = [
     { name: "All Markets", hasDropdown: true },
@@ -137,9 +138,18 @@ const FiftyTwoWeekTable = ({ data }: { data: any[] }) => {
 export default function ExplorePage() {
     return (
         <div className="flex-1 space-y-6 p-4 sm:p-6">
-            <div className="space-y-1">
-                <h1 className="text-2xl font-bold tracking-tight">Explore Markets</h1>
-                <p className="text-muted-foreground">Discover top moving stocks.</p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                    <h1 className="text-2xl font-bold tracking-tight">Explore Markets</h1>
+                    <p className="text-muted-foreground">Discover top moving stocks.</p>
+                </div>
+                <div className="relative w-full sm:w-auto sm:max-w-xs">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        placeholder="Search symbol..."
+                        className="pl-10 h-9 w-full rounded-full bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-ring"
+                    />
+                </div>
             </div>
 
             <Tabs defaultValue="gainers" className="w-full">

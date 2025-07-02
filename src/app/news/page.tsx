@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -184,12 +185,21 @@ export default function NewsPage() {
         <ClientOnly>
             <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
                 <Tabs defaultValue="news" className="w-full space-y-6">
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-3xl font-bold">News</h1>
-                        <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
-                            <TabsTrigger value="news" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">News</TabsTrigger>
-                            <TabsTrigger value="alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Alerts</TabsTrigger>
-                        </TabsList>
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <h1 className="text-3xl font-bold">News</h1>
+                            <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
+                                <TabsTrigger value="news" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">News</TabsTrigger>
+                                <TabsTrigger value="alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Alerts</TabsTrigger>
+                            </TabsList>
+                        </div>
+                        <div className="relative w-full sm:w-auto sm:max-w-xs">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Search symbol..."
+                                className="pl-10 h-9 w-full rounded-full bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-ring"
+                            />
+                        </div>
                     </div>
                     
                     <TabsContent value="news" className="mt-0 space-y-6">
@@ -197,13 +207,6 @@ export default function NewsPage() {
                             {filters.map((filter) => (
                                 <FilterButton key={filter.name} filter={filter} />
                             ))}
-                            <div className="relative flex-grow sm:flex-grow-0">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search keywords..."
-                                    className="pl-10 h-8 rounded-full bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-ring w-full sm:w-auto"
-                                />
-                            </div>
                         </div>
 
                         <div className="border-t border-border/50">
