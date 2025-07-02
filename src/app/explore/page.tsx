@@ -43,8 +43,6 @@ const MarketMoversTable = ({ data, type }: { data: any[], type: 'gainers' | 'los
                         <TableHead>Company</TableHead>
                         <TableHead className="text-right">Price</TableHead>
                         <TableHead className="text-right">% Change</TableHead>
-                        <TableHead className="text-right">52W High</TableHead>
-                        <TableHead className="text-right">52W Low</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -52,11 +50,7 @@ const MarketMoversTable = ({ data, type }: { data: any[], type: 'gainers' | 'los
                         <TableRow key={stock.ticker} className="cursor-pointer border-b-border/50">
                             <TableCell className="font-bold">{stock.ticker}</TableCell>
                             <TableCell className="text-muted-foreground truncate max-w-[120px]">{stock.name}</TableCell>
-                            <TableCell className={cn(
-                                "text-right font-medium",
-                                stock.price >= stock.fiftyTwoWeekHigh && "text-chart-positive",
-                                stock.price <= stock.fiftyTwoWeekLow && "text-chart-negative"
-                            )}>
+                            <TableCell className="text-right font-medium">
                                 ${stock.price.toFixed(2)}
                             </TableCell>
                             <TableCell className={cn(
@@ -66,8 +60,6 @@ const MarketMoversTable = ({ data, type }: { data: any[], type: 'gainers' | 'los
                                 {isGainer ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
                                 {stock.changePercent.toFixed(2)}%
                             </TableCell>
-                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekHigh.toFixed(2)}</TableCell>
-                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekLow.toFixed(2)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -86,8 +78,6 @@ const MostActiveTable = ({ data }: { data: any[] }) => {
                         <TableHead>Company</TableHead>
                         <TableHead className="text-right">Price</TableHead>
                         <TableHead className="text-right">Volume</TableHead>
-                        <TableHead className="text-right">52W High</TableHead>
-                        <TableHead className="text-right">52W Low</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -95,6 +85,40 @@ const MostActiveTable = ({ data }: { data: any[] }) => {
                         <TableRow key={stock.ticker} className="cursor-pointer border-b-border/50">
                             <TableCell className="font-bold">{stock.ticker}</TableCell>
                             <TableCell className="text-muted-foreground truncate max-w-[120px]">{stock.name}</TableCell>
+                            <TableCell className="text-right font-medium">
+                                ${stock.price.toFixed(2)}
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                                {stock.volume}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
+    )
+}
+
+const FiftyTwoWeekTable = ({ data }: { data: any[] }) => {
+    return (
+        <div className="rounded-md border">
+            <Table>
+                <TableHeader>
+                    <TableRow className="hover:bg-transparent border-b-border/50">
+                        <TableHead>Symbol</TableHead>
+                        <TableHead>Company</TableHead>
+                        <TableHead className="text-right">52W High</TableHead>
+                        <TableHead className="text-right">52W Low</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {data.map((stock) => (
+                        <TableRow key={stock.ticker} className="cursor-pointer border-b-border/50">
+                            <TableCell className="font-bold">{stock.ticker}</TableCell>
+                            <TableCell className="text-muted-foreground truncate max-w-[120px]">{stock.name}</TableCell>
+                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekHigh.toFixed(2)}</TableCell>
+                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekLow.toFixed(2)}</TableCell>
                             <TableCell className={cn(
                                 "text-right font-medium",
                                 stock.price >= stock.fiftyTwoWeekHigh && "text-chart-positive",
@@ -102,11 +126,6 @@ const MostActiveTable = ({ data }: { data: any[] }) => {
                             )}>
                                 ${stock.price.toFixed(2)}
                             </TableCell>
-                            <TableCell className="text-right font-medium">
-                                {stock.volume}
-                            </TableCell>
-                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekHigh.toFixed(2)}</TableCell>
-                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekLow.toFixed(2)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -164,6 +183,17 @@ export default function ExplorePage() {
                 </div>
                 <MostActiveTable data={mostActiveData} />
                 <div className="mt-4 flex justify-center">
+                    <Button variant="outline">View More</Button>
+                </div>
+            </div>
+
+            <div className="space-y-4 pt-6">
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-bold tracking-tight">52-Week High & Low</h2>
+                    <p className="text-muted-foreground">Stocks near their 52-week price boundaries.</p>
+                </div>
+                <FiftyTwoWeekTable data={mostActiveData} />
+                 <div className="mt-4 flex justify-center">
                     <Button variant="outline">View More</Button>
                 </div>
             </div>
