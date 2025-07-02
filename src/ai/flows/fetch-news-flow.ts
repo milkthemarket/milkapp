@@ -24,6 +24,9 @@ export const EnrichedNewsArticleSchema = NewsArticleSchema.extend({
     .string()
     .nullable()
     .describe('The stock ticker symbol for the primary company mentioned.'),
+  sentiment: z
+    .enum(['Positive', 'Negative', 'Neutral'])
+    .describe('The sentiment of the article headline (Positive, Negative, or Neutral).'),
 });
 export type EnrichedNewsArticle = z.infer<typeof EnrichedNewsArticleSchema>;
 
@@ -50,7 +53,9 @@ const newsTickerPrompt = ai.definePrompt({
   // Provide the tool to the prompt, so the AI knows it can use it.
   tools: [getNewsArticlesTool],
   // Instruct the AI on how to process the data from the tool.
-  system: `You are a financial news analyst. Your task is to fetch recent news articles using the provided tool and identify the stock ticker for the primary company mentioned in each article.
+  system: `You are a financial news analyst. Your task is to fetch recent news articles using the provided tool, perform sentiment analysis on each headline, and identify the stock ticker for the primary company mentioned.
+
+Sentiment should be classified as 'Positive', 'Negative', or 'Neutral'.
 
 Use the following mapping to determine the ticker symbol:
 - Tesla, Inc. or Tesla -> TSLA
@@ -60,7 +65,7 @@ Use the following mapping to determine the ticker symbol:
 - Google LLC or Alphabet -> GOOGL
 
 If an article does not mention any of these companies, the ticker should be null.
-Return the full list of articles, each with its identified ticker symbol.
+Return the full list of articles, each with its identified ticker symbol and sentiment.
 `,
   output: {
     schema: FetchNewsOutputSchema,
