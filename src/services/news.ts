@@ -6,7 +6,7 @@ export interface NewsArticle {
   provider: string;
 }
 
-const NEWS_API_KEY = process.env.NEWS_API_KEY;
+const EVENT_REGISTRY_API_KEY = process.env.EVENT_REGISTRY_API_KEY;
 
 // Mock data to be used as a fallback if the API call fails or key is missing
 function getMockNews(): NewsArticle[] {
@@ -54,61 +54,78 @@ function getMockNews(): NewsArticle[] {
 
 
 /**
- * Fetches recent news articles from a real news API.
+ * Fetches recent news articles from the Event Registry API.
  * Falls back to mock data if the API key is not provided or if the fetch fails.
  */
 export async function getRecentNews(): Promise<NewsArticle[]> {
-  if (!NEWS_API_KEY) {
+  if (!EVENT_REGISTRY_API_KEY) {
     console.warn(
-      'NewsAPI key not found in .env file. Using mock data as a fallback.'
+      'Event Registry API key not found in .env file. Using mock data as a fallback.'
     );
     return getMockNews();
   }
 
-  // Set the date to 24 hours ago to get the most recent news.
-  // This corresponds to the user's request for `dateStart`.
-  const fromDate = new Date();
-  fromDate.setDate(fromDate.getDate() - 1);
-  const from = fromDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-  
-  // A specific query for relevant financial news.
-  const query = encodeURIComponent('Tesla OR Apple OR Microsoft OR Nvidia OR Google OR "stock market"');
+  const url = "https://eventregistry.org/api/v1/article/getArticles";
+  const requestBody = {
+      "query": {
+          "$query": {
+              "$or": [
+                  { "sourceUri": "benzinga.com" },
+                  { "sourceUri": "seekingalpha.com" },
+                  { "sourceUri": "bloomberg.com" },
+                  { "sourceUri": "reuters.com" },
+                  { "sourceUri": "cnbc.com" },
+                  { "sourceUri": "finance.yahoo.com" },
+                  { "sourceUri": "wsj.com" },
+                  { "sourceUri": "ft.com" },
+                  { "sourceUri": "investing.com" },
+                  { "sourceUri": "marketwatch.com" }
+              ]
+          },
+          "$filter": {
+              "forceMaxDataTimeWindow": "31"
+          }
+      },
+      "resultType": "articles",
+      "articlesSortBy": "date",
+      "articlesCount": 100,
+      "apiKey": EVENT_REGISTRY_API_KEY
+  };
 
-  // Construct the URL with parameters that match the user's intent.
-  // - `sortBy=publishedAt` is equivalent to `articlesSortBy: "date"` with `articlesSortByAsc: false`.
-  // - `language=en` is equivalent to `lang: "eng"`.
-  const url = `https://newsapi.org/v2/everything?q=${query}&from=${from}&sortBy=publishedAt&language=en&apiKey=${NEWS_API_KEY}`;
-  
-  // Log the full URL for verification.
-  console.log(`Fetching news from URL: ${url}`);
+  console.log(`Fetching news from Event Registry: ${url}`);
+  console.log(`Request body: ${JSON.stringify(requestBody, null, 2)}`);
 
   try {
-    const response = await fetch(url, { cache: 'no-store' }); // Disable caching for fresh news
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+      cache: 'no-store', // Disable caching for fresh news
+    });
+
     if (!response.ok) {
       const errorBody = await response.text();
-      throw new Error(`News API error: ${response.status} ${response.statusText} - ${errorBody}`);
+      throw new Error(`Event Registry API error: ${response.status} ${response.statusText} - ${errorBody}`);
     }
     const data = await response.json();
 
     // Log the raw data for verification
-    console.log("Raw News API Response:", JSON.stringify(data, null, 2));
+    console.log("Raw Event Registry API Response:", JSON.stringify(data, null, 2));
 
-    if (data.status !== 'ok') {
-        throw new Error(`News API returned status: ${data.status} - ${data.message || ''}`);
-    }
-    
-    if (!data.articles || data.articles.length === 0) {
-        console.warn("News API returned no articles for the current query. Falling back to mock data.");
+    if (!data.articles || !data.articles.results || data.articles.results.length === 0) {
+        console.warn("Event Registry API returned no articles for the current query. Falling back to mock data.");
         return getMockNews();
     }
 
     // Map and filter articles to fit our NewsArticle interface
-    const articles: NewsArticle[] = data.articles
+    const articles: NewsArticle[] = data.articles.results
       .map((article: any) => ({
         headline: article.title,
-        description: article.description,
-        publishedDate: article.publishedAt,
-        provider: article.source.name,
+        description: article.body,
+        publishedDate: article.dateTimePub,
+        provider: article.source.title,
       }))
       .filter(
         (article: NewsArticle) => article.headline && article.description && article.publishedDate && article.provider
@@ -116,7 +133,7 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
 
     return articles;
   } catch (error) {
-    console.error('Failed to fetch real news:', error);
+    console.error('Failed to fetch real news from Event Registry:', error);
     // In case of an API error, fall back to mock data
     console.log('Falling back to mock news data.');
     return getMockNews();
