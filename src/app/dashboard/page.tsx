@@ -172,7 +172,7 @@ export default function DashboardPage() {
                 </p>
               </div>
               <Select value={account} onValueChange={(value) => setAccount(value as 'Individual' | 'Roth')}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] focus:ring-0">
                   <SelectValue placeholder="Select Account" />
                 </SelectTrigger>
                 <SelectContent>
