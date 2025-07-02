@@ -1,3 +1,4 @@
+
 export interface NewsArticle {
   headline: string;
   description: string;
@@ -62,8 +63,8 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     return getMockNews();
   }
 
-  // Fetch top business headlines from the US for real-time news
-  const url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${NEWS_API_KEY}`;
+  // Use the 'everything' endpoint and sort by publishedAt for the latest news
+  const url = `https://newsapi.org/v2/everything?q=stock&sortBy=publishedAt&language=en&apiKey=${NEWS_API_KEY}`;
 
   try {
     const response = await fetch(url, { cache: 'no-store' }); // Disable caching for fresh news
@@ -72,8 +73,16 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     }
     const data = await response.json();
 
+    // Log the raw data for verification
+    console.log("Raw News API Response:", JSON.stringify(data, null, 2));
+
     if (data.status !== 'ok') {
         throw new Error(`News API returned status: ${data.status} - ${data.message || ''}`);
+    }
+    
+    if (!data.articles) {
+        console.warn("News API response did not contain 'articles' array.", data);
+        return getMockNews();
     }
 
     // Map and filter articles to fit our NewsArticle interface
