@@ -21,6 +21,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PortfolioDistribution } from "@/components/portfolio-distribution";
 import { format, isThisMonth, isSameMonth, subMonths, isThisYear, parseISO } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
@@ -153,7 +160,7 @@ export default function DashboardPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-start">
               <div className="space-y-1.5 text-left">
-                <p className="text-sm text-muted-foreground">Portfolio</p>
+                <p className="text-sm text-muted-foreground">Portfolio ({account})</p>
                 <p className="text-5xl font-bold tracking-tighter text-white">
                   ${portfolioValue}
                 </p>
@@ -164,6 +171,15 @@ export default function DashboardPage() {
                   {gainLoss.amount} {gainLoss.percent} {gainLoss.label}
                 </p>
               </div>
+              <Select value={account} onValueChange={(value) => setAccount(value as 'Individual' | 'Roth')}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select Account" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Individual">Individual</SelectItem>
+                  <SelectItem value="Roth">Roth</SelectItem>
+                </SelectContent>
+              </Select>
           </div>
           <div>
             <PortfolioChart activeData={activeData} timeframe={timeframe} chartType={chartType} isPositive={isPositive} />
@@ -213,21 +229,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex flex-col gap-8 text-white">
-            <div className="flex gap-6 mb-2 mt-6">
-              <button
-                className={`text-lg ${account === 'Individual' ? 'font-bold text-white' : 'text-muted-foreground'}`}
-                onClick={() => setAccount('Individual')}
-              >
-                Individual
-              </button>
-              <button
-                className={`text-lg ${account === 'Roth' ? 'font-bold text-white' : 'text-muted-foreground'}`}
-                onClick={() => setAccount('Roth')}
-              >
-                Roth
-              </button>
-            </div>
-           <div className="space-y-4">
+           <div className="space-y-4 pt-6">
               <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-semibold leading-none tracking-tight">Holdings</h2>
                   <Tabs value={returnType} onValueChange={(value) => setReturnType(value as 'today' | 'total')} className="w-auto">
