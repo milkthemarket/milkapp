@@ -18,7 +18,7 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ChevronDown, Plus, Bell } from "lucide-react";
+import { ChevronDown, Plus, Bell, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +28,7 @@ import ClientOnly from "@/components/client-only";
 import { fetchNews } from "@/ai/flows/fetch-news-flow";
 import { type EnrichedNewsArticle } from "@/ai/flows/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 
 type Sentiment = 'Positive' | 'Negative' | 'Neutral';
 
@@ -41,10 +42,7 @@ const alertsData = [
 const filters = [
   { name: "Watchlist", hasDropdown: true },
   { name: "Symbol", hasDropdown: true },
-  { name: "Market", hasDropdown: true },
-  { name: "Corporate activity", hasDropdown: true },
   { name: "Region", hasDropdown: true },
-  { name: "Priority", hasDropdown: true },
 ];
 
 const sentimentBadgeClasses: Record<Sentiment, string> = {
@@ -196,10 +194,17 @@ export default function NewsPage() {
                     </div>
                     
                     <TabsContent value="full-feed" className="mt-0 space-y-6">
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 items-center">
                             {filters.map((filter) => (
                                 <FilterButton key={filter.name} filter={filter} />
                             ))}
+                            <div className="relative flex-grow sm:flex-grow-0">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search keywords..."
+                                    className="pl-10 h-8 rounded-full bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-ring w-full sm:w-auto"
+                                />
+                            </div>
                         </div>
 
                         <div className="border-t border-border/50">
