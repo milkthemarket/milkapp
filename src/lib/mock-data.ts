@@ -44,8 +44,8 @@ export const accountsData = [
 ]
 
 export const portfolioDistributionData = [
-  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#3B82F6' },
-  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#EF4444' },
+  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#8B5CF6' },
+  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#C4B5FD' },
 ];
 
 export const watchlistData = [
