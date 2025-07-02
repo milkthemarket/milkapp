@@ -37,7 +37,7 @@ const newsTickerPrompt = ai.definePrompt({
   // Provide the tool to the prompt, so the AI knows it can use it.
   tools: [getNewsArticlesTool],
   // Instruct the AI on how to process the data from the tool.
-  system: `You are a financial news analyst. Your task is to fetch recent news articles using the provided tool, perform sentiment analysis on each headline, and identify the stock ticker for the primary company mentioned.
+  prompt: `You are a financial news analyst. Your task is to fetch recent news articles using the provided tool, perform sentiment analysis on each headline, and identify the stock ticker for the primary company mentioned.
 
 Sentiment should be classified as 'Positive', 'Negative', or 'Neutral'.
 
