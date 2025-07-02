@@ -20,11 +20,11 @@ const NewsArticleSchema = z.object({
 });
 
 // Define the Zod schema for the final, enriched article object.
-export const EnrichedNewsArticleSchema = NewsArticleSchema.extend({
+const EnrichedNewsArticleSchema = NewsArticleSchema.extend({
   ticker: z
     .string()
     .nullable()
-    .describe('The stock ticker symbol for the primary company mentioned.'),
+    .describe('The stock ticker for the primary company mentioned.'),
   sentiment: z
     .enum(['Positive', 'Negative', 'Neutral'])
     .describe('The sentiment of the article headline (Positive, Negative, or Neutral).'),
