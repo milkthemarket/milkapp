@@ -119,6 +119,9 @@ export default function ExplorePage() {
                         ))}
                     </div>
                     <MarketMoversTable data={topGainersData} type="gainers" />
+                    <div className="mt-4 flex justify-center">
+                        <Button variant="outline">View More</Button>
+                    </div>
                 </TabsContent>
                 <TabsContent value="losers" className="mt-6">
                      <div className="flex flex-wrap gap-2 mb-4">
@@ -127,6 +130,9 @@ export default function ExplorePage() {
                         ))}
                     </div>
                     <MarketMoversTable data={topLosersData} type="losers" />
+                    <div className="mt-4 flex justify-center">
+                        <Button variant="outline">View More</Button>
+                    </div>
                 </TabsContent>
             </Tabs>
 
@@ -141,6 +147,9 @@ export default function ExplorePage() {
                     ))}
                 </div>
                 <MostActiveTable data={mostActiveData} />
+                <div className="mt-4 flex justify-center">
+                    <Button variant="outline">View More</Button>
+                </div>
             </div>
         </div>
     );
