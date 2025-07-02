@@ -6,6 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { portfolioDistributionData } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const data = portfolioDistributionData;
 const totalAssets = data.length;
@@ -81,33 +82,38 @@ export function PortfolioDistribution() {
             </div>
 
             {/* Breakdown Table */}
-            <div className="w-full md:w-1/2 space-y-4">
-               <div className="text-xs text-muted-foreground grid grid-cols-4 gap-4 px-4">
-                   <span>Asset type</span>
-                   <span className="text-left">Holding value</span>
-                   <span className="text-left">Allocation</span>
-                   <span className="text-right">Unrealized gain</span>
-               </div>
-               <div className="space-y-2">
-                {data.map((item) => (
-                    <div key={item.name} className="grid grid-cols-4 gap-4 items-center text-sm p-4 rounded-md bg-white/5">
-                        <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
-                            <span>{item.name}</span>
+            <div className="w-full md:w-1/2">
+              <ScrollArea>
+                <div className="space-y-4 pr-4 min-w-[420px] md:min-w-full">
+                  <div className="text-xs text-muted-foreground grid grid-cols-4 gap-4 px-4">
+                      <span>Asset type</span>
+                      <span className="text-left">Holding value</span>
+                      <span className="text-left">Allocation</span>
+                      <span className="text-right">Unrealized gain</span>
+                  </div>
+                  <div className="space-y-2">
+                    {data.map((item) => (
+                        <div key={item.name} className="grid grid-cols-4 gap-4 items-center text-sm p-4 rounded-md bg-white/5">
+                            <div className="flex items-center gap-2">
+                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
+                                <span>{item.name}</span>
+                            </div>
+                            <div className="font-semibold">
+                                ${item.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </div>
+                            <div>{item.allocation}%</div>
+                            <div className={cn(
+                                "text-right font-medium",
+                                item.gain >= 0 ? 'text-chart-positive' : 'text-chart-negative'
+                            )}>
+                                {item.gain >= 0 ? '+' : ''}${item.gain.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </div>
                         </div>
-                        <div className="font-semibold">
-                            ${item.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </div>
-                        <div>{item.allocation}%</div>
-                        <div className={cn(
-                            "text-right font-medium",
-                            item.gain >= 0 ? 'text-chart-positive' : 'text-chart-negative'
-                        )}>
-                            {item.gain >= 0 ? '+' : ''}${item.gain.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </div>
-                    </div>
-                ))}
-               </div>
+                    ))}
+                  </div>
+                </div>
+                <ScrollBar orientation="horizontal" className="md:hidden" />
+              </ScrollArea>
             </div>
           </div>
         </TabsContent>
