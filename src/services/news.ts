@@ -63,8 +63,15 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     return getMockNews();
   }
 
+  // Get yesterday's date in YYYY-MM-DD format to ensure we get recent news.
+  const fromDate = new Date();
+  fromDate.setDate(fromDate.getDate() - 1);
+  const from = fromDate.toISOString().split('T')[0];
+
   // Use the 'everything' endpoint and sort by publishedAt for the latest news
-  const url = `https://newsapi.org/v2/everything?q=stock&sortBy=publishedAt&language=en&apiKey=${NEWS_API_KEY}`;
+  const url = `https://newsapi.org/v2/everything?q=stock&from=${from}&sortBy=publishedAt&language=en&apiKey=${NEWS_API_KEY}`;
+  
+  console.log(`Fetching news from URL: ${url}`);
 
   try {
     const response = await fetch(url, { cache: 'no-store' }); // Disable caching for fresh news
