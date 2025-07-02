@@ -107,33 +107,47 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
 
     if (!response.ok) {
       const errorBody = await response.text();
-      throw new Error(`Event Registry API error: ${response.status} ${response.statusText} - ${errorBody}`);
+      throw new Error(`Event Registry API HTTP error: ${response.status} ${response.statusText} - ${errorBody}`);
     }
     const data = await response.json();
 
-    // Log the raw data for verification
-    console.log("Raw Event Registry API Response:", JSON.stringify(data, null, 2));
+    // Log the raw data for verification, as per your debugging guide
+    console.log("Raw Event Registry API Response Body:", JSON.stringify(data, null, 2));
 
-    if (!data.articles || !data.articles.results || data.articles.results.length === 0) {
+    // Check for API-level errors within the JSON response itself
+    if (data.error) {
+        throw new Error(`Event Registry API returned an error: ${data.error}`);
+    }
+
+    const results = data?.articles?.results;
+
+    if (!results || !Array.isArray(results) || results.length === 0) {
         console.warn("Event Registry API returned no articles for the current query. Falling back to mock data.");
         return getMockNews();
     }
 
     // Map and filter articles to fit our NewsArticle interface
-    const articles: NewsArticle[] = data.articles.results
+    const articles: NewsArticle[] = results
       .map((article: any) => ({
         headline: article.title,
         description: article.body,
         publishedDate: article.dateTimePub,
-        provider: article.source.title,
+        provider: article.source?.title, // Add optional chaining for safety
       }))
       .filter(
         (article: NewsArticle) => article.headline && article.description && article.publishedDate && article.provider
       );
+    
+    console.log(`Successfully mapped ${articles.length} articles from Event Registry.`);
+    
+    if (articles.length === 0 && results.length > 0) {
+        console.warn("Mapping resulted in 0 articles, check if response data structure matches expected format. Falling back to mock data.");
+        return getMockNews();
+    }
 
     return articles;
   } catch (error) {
-    console.error('Failed to fetch real news from Event Registry:', error);
+    console.error('Failed to fetch or process news from Event Registry:', error);
     // In case of an API error, fall back to mock data
     console.log('Falling back to mock news data.');
     return getMockNews();
