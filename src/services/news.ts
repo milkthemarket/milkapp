@@ -14,7 +14,7 @@ function getMockNews(): NewsArticle[] {
       headline: 'Tesla shares rise after announcing new Gigafactory in Texas',
       description:
         'Tesla Inc. saw a 5% increase in its stock price following the announcement of a new manufacturing plant.',
-      publishedDate: '2024-08-15T14:00:00Z',
+      publishedDate: new Date().toISOString(), // Ensure one article is recent for testing
       provider: 'Reuters',
     },
     {
@@ -62,7 +62,8 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     return getMockNews();
   }
 
-  const url = `https://newsapi.org/v2/everything?q=stock&sortBy=publishedAt&language=en&apiKey=${NEWS_API_KEY}`;
+  // Fetch top business headlines from the US for real-time news
+  const url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${NEWS_API_KEY}`;
 
   try {
     const response = await fetch(url, { cache: 'no-store' }); // Disable caching for fresh news

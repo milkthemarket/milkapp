@@ -82,26 +82,38 @@ const FilterButton = ({ filter }: { filter: { name: string, hasDropdown: boolean
 };
 
 function formatTimeAgo(dateString: string): string {
+    if (!dateString) return '';
     const date = new Date(dateString);
     const now = new Date();
     const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
     const intervals = [
-        { label: 'Y', seconds: 31536000 },
-        { label: 'M', seconds: 2592000 },
-        { label: 'D', seconds: 86400 },
-        { label: 'H', seconds: 3600 },
-        { label: 'Min.', seconds: 60 },
-        { label: 'Sec.', seconds: 1 }
+        { label: 'y', seconds: 31536000 },
+        { label: 'mo', seconds: 2592000 },
+        { label: 'd', seconds: 86400 },
+        { label: 'h', seconds: 3600 },
+        { label: 'm', seconds: 60 },
+        { label: 's', seconds: 1 }
     ];
+
+    if (seconds < 5) return 'Just now';
 
     for (const interval of intervals) {
         const count = Math.floor(seconds / interval.seconds);
         if (count >= 1) {
-            return `${count} ${interval.label}`;
+            return `${count}${interval.label}`;
         }
     }
     return 'Just now';
+}
+
+function isBreakingNews(dateString: string): boolean {
+    if (!dateString) return false;
+    const articleDate = new Date(dateString);
+    const now = new Date();
+    // 5 minutes in milliseconds
+    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+    return articleDate > fiveMinutesAgo;
 }
 
 function NewsSkeleton() {
@@ -147,19 +159,28 @@ export default function NewsPage() {
     const [selectedNews, setSelectedNews] = useState<EnrichedNewsArticle | null>(null);
 
     useEffect(() => {
-        async function loadNews() {
+        const loadNews = async () => {
             try {
-                setIsLoading(true);
                 const news = await fetchNews();
-                setArticles(news);
+                // Ensure articles are sorted by date, newest first
+                const sortedNews = news.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+                setArticles(sortedNews);
             } catch (error) {
                 console.error("Failed to fetch news:", error);
-                // Optionally: show a toast notification for the error
             } finally {
+                // This ensures the main loading skeleton only shows once
                 setIsLoading(false);
             }
-        }
+        };
+
+        // Initial load
         loadNews();
+
+        // Set up polling to fetch news every minute
+        const intervalId = setInterval(loadNews, 60000); 
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
     }, []);
 
     return (
@@ -204,7 +225,14 @@ export default function NewsPage() {
                                                 <Bell className="h-5 w-5" />
                                             </Button>
                                         </div>
-                                        <div className="font-medium text-base leading-snug block">{item.headline}</div>
+                                        <div className="font-medium text-base leading-snug block">
+                                            {isBreakingNews(item.publishedDate) && (
+                                                <Badge variant="outline" className="mr-2 border-chart-negative text-chart-negative font-bold">
+                                                    BREAKING
+                                                </Badge>
+                                            )}
+                                            {item.headline}
+                                        </div>
                                         <div className="flex items-center justify-between pt-1">
                                             <Badge
                                                 className={cn(
@@ -221,7 +249,12 @@ export default function NewsPage() {
                                     <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto_auto_auto] items-center gap-x-4 p-4">
                                         <span className="text-muted-foreground text-sm whitespace-nowrap w-16">{formatTimeAgo(item.publishedDate)}</span>
                                         <span className="font-bold text-sm w-20">{item.ticker}</span>
-                                        <div className="font-medium text-base leading-snug truncate flex-1">
+                                        <div className="font-medium text-base leading-snug truncate flex-1 items-center flex">
+                                            {isBreakingNews(item.publishedDate) && (
+                                                <Badge variant="outline" className="mr-2 border-chart-negative text-chart-negative font-bold">
+                                                    BREAKING
+                                                </Badge>
+                                            )}
                                             {item.headline}
                                         </div>
                                         <div className="w-24 flex justify-center">
