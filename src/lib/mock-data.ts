@@ -44,8 +44,11 @@ export const accountsData = [
 ]
 
 export const portfolioDistributionData = [
-  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#6D28D9' },
-  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#A78BFA' },
+  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#4338CA' },
+  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#6D28D9' },
+  { name: 'Bonds', value: 1000.00, allocation: 10, gain: 50.00, color: '#8B5CF6' },
+  { name: 'Cash', value: 500.00, allocation: 5, gain: 0.00, color: '#A78BFA' },
+  { name: 'Crypto', value: 1500.00, allocation: 15, gain: 300.00, color: '#C4B5FD' },
 ];
 
 export const watchlistData = [
@@ -80,4 +83,13 @@ export const topLosersData = [
   { ticker: 'PLUG', name: 'Plug Power Inc.', price: 4.01, change: -0.42, changePercent: -9.48 },
   { ticker: 'XPEV', name: 'XPeng Inc.', price: 15.02, change: -1.45, changePercent: -8.80 },
   { ticker: 'LCID', name: 'Lucid Group, Inc.', price: 4.45, change: -0.40, changePercent: -8.25 },
+];
+
+export const mostActiveData = [
+  { ticker: 'TSLA', name: 'Tesla, Inc.', price: 177.29, volume: '150.5M' },
+  { ticker: 'AAPL', name: 'Apple Inc.', price: 192.53, volume: '120.2M' },
+  { ticker: 'AMZN', name: 'Amazon.com, Inc.', price: 185.07, volume: '110.8M' },
+  { ticker: 'NVDA', name: 'NVIDIA Corporation', price: 903.67, volume: '98.7M' },
+  { ticker: 'GOOGL', name: 'Alphabet Inc.', price: 139.81, volume: '85.4M' },
+  { ticker: 'MSFT', name: 'Microsoft Corporation', price: 427.56, volume: '76.1M' },
 ];
