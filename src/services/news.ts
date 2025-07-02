@@ -66,10 +66,21 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
   }
 
   const url = "https://eventregistry.org/api/v1/article/getArticles";
-  // Using a less restrictive query as suggested for debugging
   const requestBody = {
       "query": {
           "$query": {
+              "$or": [
+                  { "sourceUri": "benzinga.com" },
+                  { "sourceUri": "seekingalpha.com" },
+                  { "sourceUri": "bloomberg.com" },
+                  { "sourceUri": "reuters.com" },
+                  { "sourceUri": "cnbc.com" },
+                  { "sourceUri": "finance.yahoo.com" },
+                  { "sourceUri": "wsj.com" },
+                  { "sourceUri": "ft.com" },
+                  { "sourceUri": "investing.com" },
+                  { "sourceUri": "marketwatch.com" }
+              ],
               "lang": "eng"
           },
           "$filter": {
@@ -82,8 +93,7 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
       "apiKey": EVENT_REGISTRY_API_KEY
   };
 
-  console.log(`Fetching news from Event Registry: ${url}`);
-  console.log(`Request body for debugging (less restrictive): ${JSON.stringify(requestBody, null, 2)}`);
+  console.log(`Fetching news from Event Registry with query: ${JSON.stringify(requestBody.query)}`);
 
   try {
     const response = await fetch(url, {
@@ -92,7 +102,7 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
-      cache: 'no-store', // Disable caching for fresh news
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -101,29 +111,25 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     }
     const data = await response.json();
 
-    // Log the raw data for verification, as per your debugging guide
     console.log('Full API response:', JSON.stringify(data, null, 2));
 
-    // Check for API-level errors within the JSON response itself
     if (data.error) {
         throw new Error(`Event Registry API returned an error: ${data.error}`);
     }
 
-    const results = data?.articles?.results || data?.results || [];
-    console.log('Mapped articles count:', results.length);
-
+    const results = data?.articles?.results || [];
+    
     if (results.length === 0) {
-        console.warn("Event Registry API returned no articles for the current query. Your source list/query might be too restrictive or there's no recent content. Falling back to mock data for now.");
+        console.warn("Event Registry API returned no articles. Your source list might be too restrictive or there's no recent content. Falling back to mock data.");
         return getMockNews();
     }
 
-    // Map and filter articles to fit our NewsArticle interface
     const articles: NewsArticle[] = results
       .map((article: any) => ({
         headline: article.title,
         description: article.body,
         publishedDate: article.dateTimePub,
-        provider: article.source?.title, // Add optional chaining for safety
+        provider: article.source?.title,
       }))
       .filter(
         (article: NewsArticle) => article.headline && article.description && article.publishedDate && article.provider
@@ -139,7 +145,6 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     return articles;
   } catch (error) {
     console.error('Failed to fetch or process news from Event Registry:', error);
-    // In case of an API error, fall back to mock data
     console.log('Falling back to mock news data.');
     return getMockNews();
   }
