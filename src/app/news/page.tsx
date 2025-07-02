@@ -25,7 +25,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import ClientOnly from "@/components/client-only";
-import { fetchNews, type EnrichedNewsArticle } from "@/ai/flows/fetch-news-flow";
+import { fetchNews } from "@/ai/flows/fetch-news-flow";
+import { type EnrichedNewsArticle } from "@/ai/flows/types";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Sentiment = 'Positive' | 'Negative' | 'Neutral';

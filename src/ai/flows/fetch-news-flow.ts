@@ -4,35 +4,18 @@
  * @fileOverview A flow for fetching news articles and identifying stock tickers.
  *
  * - fetchNews - A function that fetches news and enriches it with ticker symbols.
- * - EnrichedNewsArticle - The output type for an individual news article.
  */
 
 import { ai } from '@/ai/genkit';
-import { getRecentNews, type NewsArticle } from '@/services/news';
+import { getRecentNews } from '@/services/news';
 import { z } from 'zod';
+import {
+  FetchNewsOutputSchema,
+  NewsArticleSchema,
+  type EnrichedNewsArticle,
+} from './types';
 
-// Define the schema for a single news article returned by our mock service tool.
-const NewsArticleSchema = z.object({
-  headline: z.string(),
-  description: z.string(),
-  publishedDate: z.string().datetime(),
-  provider: z.string(),
-});
-
-// Define the Zod schema for the final, enriched article object.
-const EnrichedNewsArticleSchema = NewsArticleSchema.extend({
-  ticker: z
-    .string()
-    .nullable()
-    .describe('The stock ticker for the primary company mentioned.'),
-  sentiment: z
-    .enum(['Positive', 'Negative', 'Neutral'])
-    .describe('The sentiment of the article headline (Positive, Negative, or Neutral).'),
-});
-export type EnrichedNewsArticle = z.infer<typeof EnrichedNewsArticleSchema>;
-
-// Define the output schema for the entire flow.
-const FetchNewsOutputSchema = z.array(EnrichedNewsArticleSchema);
+export type { EnrichedNewsArticle } from './types';
 
 // Define a tool that the AI can use to fetch news. This abstracts the data source.
 const getNewsArticlesTool = ai.defineTool(
