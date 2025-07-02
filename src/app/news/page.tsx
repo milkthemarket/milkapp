@@ -299,7 +299,7 @@ export default function NewsPage() {
                     </TabsContent>
                 </Tabs>
                 <Dialog open={!!selectedNews} onOpenChange={(isOpen) => !isOpen && setSelectedNews(null)}>
-                    <DialogContent className="bg-card/80 border-none shadow-none max-w-2xl text-foreground p-6 sm:p-8">
+                    <DialogContent className="bg-card/95 border-none shadow-none max-w-2xl text-foreground p-6 sm:p-8">
                         {selectedNews && (
                             <div className="flex flex-col gap-4">
                                 <DialogHeader>
