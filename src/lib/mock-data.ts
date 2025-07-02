@@ -44,11 +44,11 @@ export const accountsData = [
 ]
 
 export const portfolioDistributionData = [
-  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#4338CA' },
-  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#6D28D9' },
-  { name: 'Bonds', value: 1000.00, allocation: 10, gain: 50.00, color: '#8B5CF6' },
-  { name: 'Cash', value: 500.00, allocation: 5, gain: 0.00, color: '#A78BFA' },
-  { name: 'Crypto', value: 1500.00, allocation: 15, gain: 300.00, color: '#C4B5FD' },
+    { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#4338CA' },
+    { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#6D28D9' },
+    { name: 'Bonds', value: 1000.00, allocation: 10, gain: 50.00, color: '#8B5CF6' },
+    { name: 'Cash', value: 500.00, allocation: 5, gain: 0.00, color: '#A78BFA' },
+    { name: 'Crypto', value: 1500.00, allocation: 15, gain: 300.00, color: '#C4B5FD' },
 ];
 
 export const watchlistData = [
@@ -68,28 +68,28 @@ export const historyData = [
 ];
 
 export const topGainersData = [
-  { ticker: 'UPST', name: 'Upstart Holdings', price: 35.60, change: 8.90, changePercent: 33.33 },
-  { ticker: 'AFRM', name: 'Affirm Holdings', price: 49.88, change: 10.11, changePercent: 25.42 },
-  { ticker: 'COIN', name: 'Coinbase Global', price: 175.21, change: 25.71, changePercent: 17.20 },
-  { ticker: 'RBLX', name: 'Roblox Corp', price: 45.15, change: 5.45, changePercent: 13.76 },
-  { ticker: 'AI', name: 'C3.ai, Inc.', price: 33.10, change: 3.50, changePercent: 11.82 },
-  { ticker: 'SOFI', name: 'SoFi Technologies', price: 8.54, change: 0.82, changePercent: 10.62 },
+  { ticker: 'UPST', name: 'Upstart Holdings', price: 35.60, change: 8.90, changePercent: 33.33, fiftyTwoWeekHigh: 40.10, fiftyTwoWeekLow: 12.50 },
+  { ticker: 'AFRM', name: 'Affirm Holdings', price: 49.88, change: 10.11, changePercent: 25.42, fiftyTwoWeekHigh: 52.30, fiftyTwoWeekLow: 15.00 },
+  { ticker: 'COIN', name: 'Coinbase Global', price: 175.21, change: 25.71, changePercent: 17.20, fiftyTwoWeekHigh: 180.00, fiftyTwoWeekLow: 50.00 },
+  { ticker: 'RBLX', name: 'Roblox Corp', price: 45.15, change: 5.45, changePercent: 13.76, fiftyTwoWeekHigh: 46.00, fiftyTwoWeekLow: 25.00 },
+  { ticker: 'AI', name: 'C3.ai, Inc.', price: 33.10, change: 3.50, changePercent: 11.82, fiftyTwoWeekHigh: 34.00, fiftyTwoWeekLow: 18.00 },
+  { ticker: 'SOFI', name: 'SoFi Technologies', price: 8.54, change: 0.82, changePercent: 10.62, fiftyTwoWeekHigh: 10.00, fiftyTwoWeekLow: 4.50 },
 ];
 
 export const topLosersData = [
-  { ticker: 'PFE', name: 'Pfizer Inc.', price: 28.55, change: -3.85, changePercent: -11.88 },
-  { ticker: 'NIO', name: 'NIO Inc.', price: 7.78, change: -0.92, changePercent: -10.57 },
-  { ticker: 'CHPT', name: 'ChargePoint Holdings', price: 2.15, change: -0.23, changePercent: -9.66 },
-  { ticker: 'PLUG', name: 'Plug Power Inc.', price: 4.01, change: -0.42, changePercent: -9.48 },
-  { ticker: 'XPEV', name: 'XPeng Inc.', price: 15.02, change: -1.45, changePercent: -8.80 },
-  { ticker: 'LCID', name: 'Lucid Group, Inc.', price: 4.45, change: -0.40, changePercent: -8.25 },
+  { ticker: 'PFE', name: 'Pfizer Inc.', price: 28.55, change: -3.85, changePercent: -11.88, fiftyTwoWeekHigh: 45.00, fiftyTwoWeekLow: 28.00 },
+  { ticker: 'NIO', name: 'NIO Inc.', price: 7.78, change: -0.92, changePercent: -10.57, fiftyTwoWeekHigh: 15.00, fiftyTwoWeekLow: 7.50 },
+  { ticker: 'CHPT', name: 'ChargePoint Holdings', price: 2.15, change: -0.23, changePercent: -9.66, fiftyTwoWeekHigh: 10.00, fiftyTwoWeekLow: 2.10 },
+  { ticker: 'PLUG', name: 'Plug Power Inc.', price: 4.01, change: -0.42, changePercent: -9.48, fiftyTwoWeekHigh: 12.00, fiftyTwoWeekLow: 3.90 },
+  { ticker: 'XPEV', name: 'XPeng Inc.', price: 15.02, change: -1.45, changePercent: -8.80, fiftyTwoWeekHigh: 25.00, fiftyTwoWeekLow: 14.50 },
+  { ticker: 'LCID', name: 'Lucid Group, Inc.', price: 4.45, change: -0.40, changePercent: -8.25, fiftyTwoWeekHigh: 8.00, fiftyTwoWeekLow: 4.40 },
 ];
 
 export const mostActiveData = [
-  { ticker: 'TSLA', name: 'Tesla, Inc.', price: 177.29, volume: '150.5M' },
-  { ticker: 'AAPL', name: 'Apple Inc.', price: 192.53, volume: '120.2M' },
-  { ticker: 'AMZN', name: 'Amazon.com, Inc.', price: 185.07, volume: '110.8M' },
-  { ticker: 'NVDA', name: 'NVIDIA Corporation', price: 903.67, volume: '98.7M' },
-  { ticker: 'GOOGL', name: 'Alphabet Inc.', price: 139.81, volume: '85.4M' },
-  { ticker: 'MSFT', name: 'Microsoft Corporation', price: 427.56, volume: '76.1M' },
+  { ticker: 'TSLA', name: 'Tesla, Inc.', price: 177.29, volume: '150.5M', fiftyTwoWeekHigh: 300.00, fiftyTwoWeekLow: 150.00 },
+  { ticker: 'AAPL', name: 'Apple Inc.', price: 192.53, volume: '120.2M', fiftyTwoWeekHigh: 200.00, fiftyTwoWeekLow: 160.00 },
+  { ticker: 'AMZN', name: 'Amazon.com, Inc.', price: 185.07, volume: '110.8M', fiftyTwoWeekHigh: 190.00, fiftyTwoWeekLow: 110.00 },
+  { ticker: 'NVDA', name: 'NVIDIA Corporation', price: 903.67, volume: '98.7M', fiftyTwoWeekHigh: 950.00, fiftyTwoWeekLow: 400.00 },
+  { ticker: 'GOOGL', name: 'Alphabet Inc.', price: 139.81, volume: '85.4M', fiftyTwoWeekHigh: 150.00, fiftyTwoWeekLow: 120.00 },
+  { ticker: 'MSFT', name: 'Microsoft Corporation', price: 427.56, volume: '76.1M', fiftyTwoWeekHigh: 430.00, fiftyTwoWeekLow: 300.00 },
 ];

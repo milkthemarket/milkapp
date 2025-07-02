@@ -43,6 +43,8 @@ const MarketMoversTable = ({ data, type }: { data: any[], type: 'gainers' | 'los
                         <TableHead>Company</TableHead>
                         <TableHead className="text-right">Price</TableHead>
                         <TableHead className="text-right">% Change</TableHead>
+                        <TableHead className="text-right">52W High</TableHead>
+                        <TableHead className="text-right">52W Low</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -50,7 +52,11 @@ const MarketMoversTable = ({ data, type }: { data: any[], type: 'gainers' | 'los
                         <TableRow key={stock.ticker} className="cursor-pointer border-b-border/50">
                             <TableCell className="font-bold">{stock.ticker}</TableCell>
                             <TableCell className="text-muted-foreground truncate max-w-[120px]">{stock.name}</TableCell>
-                            <TableCell className="text-right font-medium">
+                            <TableCell className={cn(
+                                "text-right font-medium",
+                                stock.price >= stock.fiftyTwoWeekHigh && "text-chart-positive",
+                                stock.price <= stock.fiftyTwoWeekLow && "text-chart-negative"
+                            )}>
                                 ${stock.price.toFixed(2)}
                             </TableCell>
                             <TableCell className={cn(
@@ -60,6 +66,8 @@ const MarketMoversTable = ({ data, type }: { data: any[], type: 'gainers' | 'los
                                 {isGainer ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
                                 {stock.changePercent.toFixed(2)}%
                             </TableCell>
+                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekHigh.toFixed(2)}</TableCell>
+                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekLow.toFixed(2)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -78,6 +86,8 @@ const MostActiveTable = ({ data }: { data: any[] }) => {
                         <TableHead>Company</TableHead>
                         <TableHead className="text-right">Price</TableHead>
                         <TableHead className="text-right">Volume</TableHead>
+                        <TableHead className="text-right">52W High</TableHead>
+                        <TableHead className="text-right">52W Low</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -85,12 +95,18 @@ const MostActiveTable = ({ data }: { data: any[] }) => {
                         <TableRow key={stock.ticker} className="cursor-pointer border-b-border/50">
                             <TableCell className="font-bold">{stock.ticker}</TableCell>
                             <TableCell className="text-muted-foreground truncate max-w-[120px]">{stock.name}</TableCell>
-                            <TableCell className="text-right font-medium">
+                            <TableCell className={cn(
+                                "text-right font-medium",
+                                stock.price >= stock.fiftyTwoWeekHigh && "text-chart-positive",
+                                stock.price <= stock.fiftyTwoWeekLow && "text-chart-negative"
+                            )}>
                                 ${stock.price.toFixed(2)}
                             </TableCell>
                             <TableCell className="text-right font-medium">
                                 {stock.volume}
                             </TableCell>
+                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekHigh.toFixed(2)}</TableCell>
+                            <TableCell className="text-right font-medium">${stock.fiftyTwoWeekLow.toFixed(2)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
