@@ -108,7 +108,7 @@ export default function DashboardPage() {
             <Skeleton className="h-10 w-[240px] bg-muted/50" />
           </div>
           <div>
-            <Skeleton className="h-[250px] w-full bg-muted/50" />
+            <Skeleton className="h-[350px] w-full bg-muted/50" />
             <div className="flex items-center gap-2 mt-4">
               <Skeleton className="h-8 w-full bg-muted/50" />
             </div>

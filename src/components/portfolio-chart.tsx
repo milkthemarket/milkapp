@@ -43,7 +43,7 @@ export function PortfolioChart({ activeData, timeframe, chartType, isPositive }:
                 color: "hsl(var(--chart-negative))"
             }
         }} 
-        className="h-[250px] w-full"
+        className="h-[350px] w-full"
     >
         <ComposedChart
             accessibilityLayer
