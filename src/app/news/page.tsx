@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -184,16 +183,16 @@ export default function NewsPage() {
     return (
         <ClientOnly>
             <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
-                <Tabs defaultValue="full-feed" className="w-full space-y-6">
-                    <div className="flex justify-between items-center">
+                <Tabs defaultValue="news" className="w-full space-y-6">
+                    <div className="flex items-center gap-4">
                         <h1 className="text-3xl font-bold">News</h1>
                         <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
-                            <TabsTrigger value="full-feed" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Full Feed</TabsTrigger>
-                            <TabsTrigger value="my-alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">My Alerts</TabsTrigger>
+                            <TabsTrigger value="news" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">News</TabsTrigger>
+                            <TabsTrigger value="alerts" className="px-3 py-1 rounded-full shadow-none data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Alerts</TabsTrigger>
                         </TabsList>
                     </div>
                     
-                    <TabsContent value="full-feed" className="mt-0 space-y-6">
+                    <TabsContent value="news" className="mt-0 space-y-6">
                         <div className="flex flex-wrap gap-2 items-center">
                             {filters.map((filter) => (
                                 <FilterButton key={filter.name} filter={filter} />
@@ -287,7 +286,7 @@ export default function NewsPage() {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="my-alerts" className="mt-0">
+                    <TabsContent value="alerts" className="mt-0">
                         <div className="flex items-center justify-between">
                             <h2 className="text-2xl font-bold tracking-tight">Manage Alerts</h2>
                             <Button variant="outline">
