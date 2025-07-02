@@ -59,13 +59,43 @@ export const watchlistData = [
   { symbol: 'VXUS', totalValue: 1500.00, change: 2.30, changePercent: 0.5, gainLoss: 50.00, totalGainLossPercent: 3.4, portfolioPercentage: 7.5, sharesHeld: 28 },
 ];
 
+
+const now = new Date();
+// A date in the current month
+const thisMonthDate1 = new Date();
+thisMonthDate1.setDate(now.getDate() - 2);
+thisMonthDate1.setHours(10, 0, 0);
+
+const thisMonthDate2 = new Date();
+thisMonthDate2.setDate(now.getDate() - 7);
+thisMonthDate2.setHours(14, 30, 0);
+
+// A date in the last month
+const lastMonthDate = new Date();
+lastMonthDate.setMonth(now.getMonth() - 1);
+lastMonthDate.setHours(9, 15, 0);
+
+// A date earlier this year but not last month
+const earlierThisYearDate = new Date();
+earlierThisYearDate.setMonth(now.getMonth() - 3);
+earlierThisYearDate.setHours(16, 0, 0);
+if (earlierThisYearDate.getMonth() === lastMonthDate.getMonth()) {
+    earlierThisYearDate.setMonth(now.getMonth() - 2);
+}
+
+// A date from a previous year
+const lastYearDate = new Date();
+lastYearDate.setFullYear(now.getFullYear() - 1);
+lastYearDate.setHours(11, 45, 0);
+
 export const historyData = [
-    { id: 1, type: 'Buy', asset: 'NVDA', details: '10 shares @ $415.00', amount: 4150.00, date: '2 days ago' },
-    { id: 2, type: 'Sell', asset: 'TSLA', details: '5 shares @ $265.00', amount: 1325.00, date: '5 days ago' },
-    { id: 3, type: 'Dividend', asset: 'AAPL', details: 'Q3 Dividend', amount: 7.20, date: '1 week ago' },
-    { id: 4, type: 'Deposit', asset: 'USD', details: 'Bank Transfer', amount: 5000.00, date: '2 weeks ago' },
-    { id: 5, type: 'Withdrawal', asset: 'USD', details: 'Bank Transfer', amount: 2000.00, date: '3 weeks ago' },
+    { id: 1, type: 'Buy', asset: 'NVDA', details: '10 shares @ $415.00', amount: 4150.00, date: thisMonthDate1.toISOString() },
+    { id: 2, type: 'Sell', asset: 'TSLA', details: '5 shares @ $265.00', amount: 1325.00, date: lastMonthDate.toISOString() },
+    { id: 3, type: 'Dividend', asset: 'AAPL', details: 'Q3 Dividend', amount: 7.20, date: earlierThisYearDate.toISOString() },
+    { id: 4, type: 'Deposit', asset: 'USD', details: 'Bank Transfer', amount: 5000.00, date: lastYearDate.toISOString() },
+    { id: 5, type: 'Withdrawal', asset: 'USD', details: 'Bank Transfer', amount: 2000.00, date: thisMonthDate2.toISOString() },
 ];
+
 
 export const topGainersData = [
   { ticker: 'UPST', name: 'Upstart Holdings', price: 35.60, change: 8.90, changePercent: 33.33, fiftyTwoWeekHigh: 40.10, fiftyTwoWeekLow: 12.50 },

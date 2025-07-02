@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { accountsData, watchlistData, historyData } from "@/lib/mock-data";
 import { PortfolioChart } from "@/components/portfolio-chart";
 import type { Timeframe } from "@/components/portfolio-chart";
@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PortfolioDistribution } from "@/components/portfolio-distribution";
+import { format, isThisMonth, isSameMonth, subMonths, isThisYear, parseISO } from "date-fns";
 
 export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
@@ -94,6 +95,34 @@ export default function DashboardPage() {
       Deposit: { color: 'text-chart-positive', sign: '+' },
       Withdrawal: { color: 'text-chart-negative', sign: '-' },
   };
+
+  const groupedHistory = useMemo(() => {
+    return historyData
+      .slice()
+      .sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime())
+      .reduce((acc, item) => {
+        const itemDate = parseISO(item.date);
+        const now = new Date();
+        const lastMonthDate = subMonths(now, 1);
+        let groupName: string;
+
+        if (isThisMonth(itemDate)) {
+          groupName = 'This Month';
+        } else if (isSameMonth(itemDate, lastMonthDate)) {
+          groupName = 'Last Month';
+        } else if (isThisYear(itemDate)) {
+          groupName = 'Earlier This Year';
+        } else {
+          groupName = format(itemDate, 'yyyy');
+        }
+
+        if (!acc[groupName]) {
+          acc[groupName] = [];
+        }
+        acc[groupName].push(item);
+        return acc;
+      }, {} as Record<string, typeof historyData>);
+  }, []);
   
   if (!isClient) {
     return (
@@ -294,38 +323,44 @@ export default function DashboardPage() {
           <div className="space-y-4">
               <h2 className="text-2xl font-semibold leading-none tracking-tight">History</h2>
               <div className="flex flex-col">
-                {historyData.map((item) => {
-                  const config = historyTypeConfig[item.type];
-                  if (!config) return null;
-                  const { color, sign } = config;
-                  
-                  return (
-                    <div key={item.id} className="flex items-center justify-between py-4 border-b border-white/10 last:border-0">
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <p className="font-bold">
-                              <span className="font-bold">{item.type}</span>
-                              {' '}
-                              <span>{item.asset}</span>
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                              {item.details || ''}
-                          </p>
+                {Object.entries(groupedHistory).map(([groupName, items]) => (
+                  <div key={groupName}>
+                    <h3 className="text-base font-semibold text-muted-foreground pt-6 pb-2 sticky top-0 bg-background/95 backdrop-blur-sm">{groupName}</h3>
+                    {items.map((item) => {
+                      const config = historyTypeConfig[item.type];
+                      if (!config) return null;
+                      const { color, sign } = config;
+                      
+                      return (
+                        <div key={item.id} className="flex items-center justify-between py-4 border-b border-white/10 last:border-0">
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <p className="font-bold">
+                                  <span className="font-bold">{item.type}</span>
+                                  {' '}
+                                  <span>{item.asset}</span>
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                  {item.details || ''}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className={`font-medium ${color}`}>
+                              {sign}$
+                              {item.amount.toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}
+                            </p>
+                            <p className="text-sm text-muted-foreground">{format(parseISO(item.date), "MMM do, yyyy")}</p>
+                            <p className="text-sm text-muted-foreground">{format(parseISO(item.date), "p")}</p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className={`font-medium ${color}`}>
-                          {sign}$
-                          {item.amount.toLocaleString('en-US', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </p>
-                        <p className="text-sm text-muted-foreground">{item.date}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
            </div>
         </div>
