@@ -66,21 +66,11 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
   }
 
   const url = "https://eventregistry.org/api/v1/article/getArticles";
+  // Using a less restrictive query as suggested for debugging
   const requestBody = {
       "query": {
           "$query": {
-              "$or": [
-                  { "sourceUri": "benzinga.com" },
-                  { "sourceUri": "seekingalpha.com" },
-                  { "sourceUri": "bloomberg.com" },
-                  { "sourceUri": "reuters.com" },
-                  { "sourceUri": "cnbc.com" },
-                  { "sourceUri": "finance.yahoo.com" },
-                  { "sourceUri": "wsj.com" },
-                  { "sourceUri": "ft.com" },
-                  { "sourceUri": "investing.com" },
-                  { "sourceUri": "marketwatch.com" }
-              ]
+              "lang": "eng"
           },
           "$filter": {
               "forceMaxDataTimeWindow": "31"
@@ -93,7 +83,7 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
   };
 
   console.log(`Fetching news from Event Registry: ${url}`);
-  console.log(`Request body: ${JSON.stringify(requestBody, null, 2)}`);
+  console.log(`Request body for debugging (less restrictive): ${JSON.stringify(requestBody, null, 2)}`);
 
   try {
     const response = await fetch(url, {
@@ -112,17 +102,18 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     const data = await response.json();
 
     // Log the raw data for verification, as per your debugging guide
-    console.log("Raw Event Registry API Response Body:", JSON.stringify(data, null, 2));
+    console.log('Full API response:', JSON.stringify(data, null, 2));
 
     // Check for API-level errors within the JSON response itself
     if (data.error) {
         throw new Error(`Event Registry API returned an error: ${data.error}`);
     }
 
-    const results = data?.articles?.results;
+    const results = data?.articles?.results || data?.results || [];
+    console.log('Mapped articles count:', results.length);
 
-    if (!results || !Array.isArray(results) || results.length === 0) {
-        console.warn("Event Registry API returned no articles for the current query. Falling back to mock data.");
+    if (results.length === 0) {
+        console.warn("Event Registry API returned no articles for the current query. Your source list/query might be too restrictive or there's no recent content. Falling back to mock data for now.");
         return getMockNews();
     }
 
