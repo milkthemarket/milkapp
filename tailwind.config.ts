@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -90,10 +91,15 @@ export default {
             height: '0',
           },
         },
+        'flash-white': {
+            '0%, 100%': { backgroundColor: 'transparent' },
+            '25%, 75%': { backgroundColor: 'hsl(var(--foreground))' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'flash-white': 'flash-white 0.4s ease-in-out 2',
       },
     },
   },

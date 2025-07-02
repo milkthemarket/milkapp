@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -9,7 +9,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { 
   Dialog,
@@ -39,44 +40,13 @@ const alertsData = [
     { id: 4, asset: 'News', condition: 'for TSLA', active: true },
 ];
 
-const filters = [
-  { name: "Watchlist", hasDropdown: true },
-  { name: "Symbol", hasDropdown: true },
-  { name: "Region", hasDropdown: true },
-];
+const marketFilters = ['Stocks', 'ETFs', 'Crypto', 'Forex', 'Indices', 'Futures', 'Options', 'Government bonds', 'Corporate bonds', 'Economy'];
+
 
 const sentimentBadgeClasses: Record<Sentiment, string> = {
     Positive: 'bg-green-900/50 text-green-400 border border-green-400/30',
     Negative: 'bg-red-900/50 text-red-400 border border-red-400/30',
     Neutral: 'bg-muted/50 text-muted-foreground border border-muted-foreground/30',
-};
-
-const FilterButton = ({ filter }: { filter: { name: string, hasDropdown: boolean } }) => {
-    const buttonContent = (
-        <Button variant="outline" className="h-8 rounded-full px-4 text-xs font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 whitespace-nowrap">
-            {filter.name}
-            {filter.hasDropdown && <ChevronDown className="ml-2 h-4 w-4" />}
-        </Button>
-    );
-
-    if (filter.hasDropdown) {
-        return (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    {buttonContent}
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                    <DropdownMenuLabel>{filter.name} Options</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem>Option 1</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem checked>Option 2</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Option 3</DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        )
-    }
-
-    return buttonContent;
 };
 
 function formatTimeAgo(dateString: string): string {
@@ -155,37 +125,65 @@ export default function NewsPage() {
     const [articles, setArticles] = useState<EnrichedNewsArticle[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedNews, setSelectedNews] = useState<EnrichedNewsArticle | null>(null);
+    const [sources, setSources] = useState<string[]>([]);
+    const [selectedSource, setSelectedSource] = useState<string>('all');
+    const [selectedMarket, setSelectedMarket] = useState<string>('Stocks');
+    const [isFlashing, setIsFlashing] = useState(false);
 
     useEffect(() => {
         const loadNews = async () => {
             try {
                 const news = await fetchNews();
-                // Ensure articles are sorted by date, newest first
                 const sortedNews = news.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
-                setArticles(sortedNews);
+                
+                setArticles(prevArticles => {
+                    if (prevArticles.length > 0 && sortedNews.length > 0 && sortedNews[0].publishedDate !== prevArticles[0].publishedDate) {
+                        setIsFlashing(true);
+                    }
+                    return sortedNews;
+                });
+                
+                const uniqueSources = [...new Set(news.map(a => a.provider))].sort();
+                setSources(uniqueSources);
+
             } catch (error) {
                 console.error("Failed to fetch news:", error);
             } finally {
-                // This ensures the main loading skeleton only shows once
                 setIsLoading(false);
             }
         };
 
-        // Initial load
         loadNews();
-
-        // Set up polling to fetch news every minute
         const intervalId = setInterval(loadNews, 60000); 
-
-        // Cleanup interval on component unmount
         return () => clearInterval(intervalId);
     }, []);
+
+    useEffect(() => {
+        if (isFlashing) {
+            const timer = setTimeout(() => setIsFlashing(false), 800); // Animation is 0.4s * 2
+            return () => clearTimeout(timer);
+        }
+    }, [isFlashing]);
+
+    const filteredArticles = useMemo(() => {
+        return articles
+            .filter(article => selectedSource === 'all' || article.provider === selectedSource)
+            .filter(() => {
+                // Mock filtering for markets as we don't have this data yet
+                if (selectedMarket === 'Stocks') return true;
+                return false;
+            });
+    }, [articles, selectedSource, selectedMarket]);
 
     return (
         <ClientOnly>
             <div className="flex-1 p-4 sm:p-6 bg-background text-foreground">
                 <Tabs defaultValue="news" className="w-full space-y-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className={cn(
+                        "flex flex-wrap items-center justify-between gap-4 transition-colors duration-200 rounded-full",
+                         isFlashing && "animate-flash-white"
+                        )}
+                    >
                         <div className="flex items-center gap-4">
                             <h1 className="text-3xl font-bold">News</h1>
                             <TabsList className="bg-muted p-1 rounded-full h-auto text-sm">
@@ -204,9 +202,40 @@ export default function NewsPage() {
                     
                     <TabsContent value="news" className="mt-0 space-y-6">
                         <div className="flex flex-wrap gap-2 items-center">
-                            {filters.map((filter) => (
-                                <FilterButton key={filter.name} filter={filter} />
-                            ))}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="h-8 rounded-full px-4 text-xs font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 whitespace-nowrap">
+                                        Source: {selectedSource === 'all' ? 'All' : selectedSource}
+                                        <ChevronDown className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start">
+                                    <DropdownMenuLabel>Filter by Source</DropdownMenuLabel>
+                                    <DropdownMenuRadioGroup value={selectedSource} onValueChange={setSelectedSource}>
+                                        <DropdownMenuRadioItem value="all">All Sources</DropdownMenuRadioItem>
+                                        {sources.map(source => (
+                                            <DropdownMenuRadioItem key={source} value={source}>{source}</DropdownMenuRadioItem>
+                                        ))}
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="h-8 rounded-full px-4 text-xs font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 whitespace-nowrap">
+                                        Market: {selectedMarket}
+                                        <ChevronDown className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start">
+                                    <DropdownMenuLabel>Filter by Market</DropdownMenuLabel>
+                                    <DropdownMenuRadioGroup value={selectedMarket} onValueChange={setSelectedMarket}>
+                                        {marketFilters.map(market => (
+                                            <DropdownMenuRadioItem key={market} value={market}>{market}</DropdownMenuRadioItem>
+                                        ))}
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
 
                         <div className="border-t border-border/50">
@@ -220,7 +249,7 @@ export default function NewsPage() {
                         </div>
                         {isLoading ? <NewsSkeleton /> : (
                             <div className="divide-y divide-border/50">
-                                {articles.map((item, index) => (
+                                {filteredArticles.map((item, index) => (
                                 <div key={index} onClick={() => setSelectedNews(item)} className="cursor-pointer hover:bg-muted/30">
                                     <div className="p-4 space-y-2 md:hidden">
                                         <div className="flex justify-between items-center text-sm">
