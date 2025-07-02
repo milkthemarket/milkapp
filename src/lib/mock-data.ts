@@ -44,8 +44,8 @@ export const accountsData = [
 ]
 
 export const portfolioDistributionData = [
-  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#8B5CF6' },
-  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#C4B5FD' },
+  { name: 'Fund', value: 8800.00, allocation: 88, gain: 1200.00, color: '#6D28D9' },
+  { name: 'Stock', value: 1200.00, allocation: 12, gain: -150.00, color: '#A78BFA' },
 ];
 
 export const watchlistData = [
@@ -62,4 +62,22 @@ export const historyData = [
     { id: 3, type: 'Dividend', asset: 'AAPL', details: 'Q3 Dividend', amount: 7.20, date: '1 week ago' },
     { id: 4, type: 'Deposit', asset: 'USD', details: 'Bank Transfer', amount: 5000.00, date: '2 weeks ago' },
     { id: 5, type: 'Withdrawal', asset: 'USD', details: 'Bank Transfer', amount: 2000.00, date: '3 weeks ago' },
+];
+
+export const topGainersData = [
+  { ticker: 'UPST', name: 'Upstart Holdings', price: 35.60, change: 8.90, changePercent: 33.33 },
+  { ticker: 'AFRM', name: 'Affirm Holdings', price: 49.88, change: 10.11, changePercent: 25.42 },
+  { ticker: 'COIN', name: 'Coinbase Global', price: 175.21, change: 25.71, changePercent: 17.20 },
+  { ticker: 'RBLX', name: 'Roblox Corp', price: 45.15, change: 5.45, changePercent: 13.76 },
+  { ticker: 'AI', name: 'C3.ai, Inc.', price: 33.10, change: 3.50, changePercent: 11.82 },
+  { ticker: 'SOFI', name: 'SoFi Technologies', price: 8.54, change: 0.82, changePercent: 10.62 },
+];
+
+export const topLosersData = [
+  { ticker: 'PFE', name: 'Pfizer Inc.', price: 28.55, change: -3.85, changePercent: -11.88 },
+  { ticker: 'NIO', name: 'NIO Inc.', price: 7.78, change: -0.92, changePercent: -10.57 },
+  { ticker: 'CHPT', name: 'ChargePoint Holdings', price: 2.15, change: -0.23, changePercent: -9.66 },
+  { ticker: 'PLUG', name: 'Plug Power Inc.', price: 4.01, change: -0.42, changePercent: -9.48 },
+  { ticker: 'XPEV', name: 'XPeng Inc.', price: 15.02, change: -1.45, changePercent: -8.80 },
+  { ticker: 'LCID', name: 'Lucid Group, Inc.', price: 4.45, change: -0.40, changePercent: -8.25 },
 ];

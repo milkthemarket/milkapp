@@ -1,18 +1,105 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+
+'use client';
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { topGainersData, topLosersData } from "@/lib/mock-data";
+import { cn } from "@/lib/utils";
+import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
+
+const filters = [
+    { name: "All Markets", hasDropdown: true },
+    { name: "Market Cap", hasDropdown: true },
+    { name: "Sector", hasDropdown: true },
+    { name: "Volume", hasDropdown: true },
+];
+
+const FilterButton = ({ filter }: { filter: { name:string, hasDropdown: boolean } }) => {
+    return (
+        <Button variant="outline" className="h-8 rounded-full px-4 text-xs font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 whitespace-nowrap">
+            {filter.name}
+            {filter.hasDropdown && <ChevronDown className="ml-2 h-4 w-4" />}
+        </Button>
+    );
+};
+
+
+const MarketMoversTable = ({ data, type }: { data: any[], type: 'gainers' | 'losers' }) => {
+    const isGainer = type === 'gainers';
+    return (
+        <div className="rounded-md border">
+            <Table>
+                <TableHeader>
+                    <TableRow className="hover:bg-transparent border-b-border/50">
+                        <TableHead>Symbol</TableHead>
+                        <TableHead>Company</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                        <TableHead className="text-right">% Change</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {data.map((stock) => (
+                        <TableRow key={stock.ticker} className="cursor-pointer border-b-border/50">
+                            <TableCell className="font-bold">{stock.ticker}</TableCell>
+                            <TableCell className="text-muted-foreground truncate max-w-[120px]">{stock.name}</TableCell>
+                            <TableCell className="text-right font-medium">
+                                ${stock.price.toFixed(2)}
+                            </TableCell>
+                            <TableCell className={cn(
+                                "text-right font-bold flex justify-end items-center gap-1",
+                                isGainer ? 'text-chart-positive' : 'text-chart-negative'
+                            )}>
+                                {isGainer ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+                                {stock.changePercent.toFixed(2)}%
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
+    )
+}
 
 export default function ExplorePage() {
     return (
         <div className="flex-1 space-y-6 p-4 sm:p-6">
-            <div className="space-y-1">
-                <h1 className="text-2xl font-bold tracking-tight">Explore</h1>
-                <p className="text-muted-foreground">Discover new opportunities.</p>
+            <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                    <h1 className="text-2xl font-bold tracking-tight">Explore Markets</h1>
+                    <p className="text-muted-foreground">Discover top moving stocks.</p>
+                </div>
             </div>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Explore Section</CardTitle>
-                    <CardDescription>Content for the explore page will be added here soon.</CardDescription>
-                </CardHeader>
-            </Card>
+
+            <Tabs defaultValue="gainers" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+                    <TabsTrigger value="gainers">Top Gainers</TabsTrigger>
+                    <TabsTrigger value="losers">Top Losers</TabsTrigger>
+                </TabsList>
+                <TabsContent value="gainers" className="mt-6">
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {filters.map((filter) => (
+                            <FilterButton key={filter.name} filter={filter} />
+                        ))}
+                    </div>
+                    <MarketMoversTable data={topGainersData} type="gainers" />
+                </TabsContent>
+                <TabsContent value="losers" className="mt-6">
+                     <div className="flex flex-wrap gap-2 mb-4">
+                        {filters.map((filter) => (
+                            <FilterButton key={filter.name} filter={filter} />
+                        ))}
+                    </div>
+                    <MarketMoversTable data={topLosersData} type="losers" />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }
