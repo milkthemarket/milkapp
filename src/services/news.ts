@@ -65,17 +65,21 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     return getMockNews();
   }
 
-  // Get yesterday's date in YYYY-MM-DD format to ensure we get recent news.
+  // Set the date to 24 hours ago to get the most recent news.
+  // This corresponds to the user's request for `dateStart`.
   const fromDate = new Date();
   fromDate.setDate(fromDate.getDate() - 1);
-  const from = fromDate.toISOString().split('T')[0];
+  const from = fromDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
   
-  // A more specific query to get relevant, recent news.
+  // A specific query for relevant financial news.
   const query = encodeURIComponent('Tesla OR Apple OR Microsoft OR Nvidia OR Google OR "stock market"');
 
-  // Use the 'everything' endpoint and sort by publishedAt for the latest news
+  // Construct the URL with parameters that match the user's intent.
+  // - `sortBy=publishedAt` is equivalent to `articlesSortBy: "date"` with `articlesSortByAsc: false`.
+  // - `language=en` is equivalent to `lang: "eng"`.
   const url = `https://newsapi.org/v2/everything?q=${query}&from=${from}&sortBy=publishedAt&language=en&apiKey=${NEWS_API_KEY}`;
   
+  // Log the full URL for verification.
   console.log(`Fetching news from URL: ${url}`);
 
   try {
