@@ -62,8 +62,7 @@ export async function getRecentNews(): Promise<NewsArticle[]> {
     return getMockNews();
   }
 
-  // Using top-headlines for business in the US is a good source for a trading app.
-  const url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${NEWS_API_KEY}`;
+  const url = `https://newsapi.org/v2/everything?q=stock&sortBy=publishedAt&language=en&apiKey=${NEWS_API_KEY}`;
 
   try {
     const response = await fetch(url, { cache: 'no-store' }); // Disable caching for fresh news
