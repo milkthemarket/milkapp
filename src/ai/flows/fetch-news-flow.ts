@@ -16,6 +16,7 @@ const NewsArticleSchema = z.object({
   headline: z.string(),
   description: z.string(),
   publishedDate: z.string().datetime(),
+  provider: z.string(),
 });
 
 // Define the Zod schema for the final, enriched article object.
@@ -65,7 +66,7 @@ Use the following mapping to determine the ticker symbol:
 - Google LLC or Alphabet -> GOOGL
 
 If an article does not mention any of these companies, the ticker should be null.
-Return the full list of articles, each with its identified ticker symbol and sentiment.
+Return the full list of articles, each with its identified ticker symbol and sentiment. Preserve the provider information.
 `,
   output: {
     schema: FetchNewsOutputSchema,

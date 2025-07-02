@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -25,108 +25,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import ClientOnly from "@/components/client-only";
+import { fetchNews, type EnrichedNewsArticle } from "@/ai/flows/fetch-news-flow";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Sentiment = 'Positive' | 'Negative' | 'Neutral';
-
-interface NewsItem {
-  id: number;
-  timeAgo: string;
-  symbol: string;
-  headline: string;
-  provider: string;
-  sentiment: Sentiment;
-  price: number;
-  change: number;
-  changePercent: number;
-  content: string;
-}
-
-const newsData: NewsItem[] = [
-    {
-      id: 1,
-      timeAgo: '1 Min.',
-      symbol: 'TSLA',
-      headline: 'Tesla shares slump as deliveries miss estimates for the fourth quarter',
-      provider: 'Reuters',
-      sentiment: 'Negative',
-      price: 177.29,
-      change: -5.43,
-      changePercent: -2.98,
-      content: 'Tesla Inc shares fell on Tuesday after the electric vehicle maker missed Wall Street estimates for fourth-quarter deliveries, as it battled a slowing market and navigated production hurdles for its new Cybertruck. The company handed over 484,507 vehicles in the last three months of the year, up 11.4% from the prior quarter, but still behind analysts\' average estimate of 483,173, according to LSEG data. The miss comes after a period of aggressive price cuts by Tesla to woo buyers, which have squeezed its margins and raised investor concerns.'
-    },
-    {
-      id: 2,
-      timeAgo: '5 Min.',
-      symbol: 'AAPL',
-      headline: 'Apple Vision Pro sets launch date for February 2nd, pre-orders to open soon',
-      provider: 'Bloomberg',
-      sentiment: 'Positive',
-      price: 192.53,
-      change: 2.77,
-      changePercent: 1.46,
-      content: 'Apple announced that its highly anticipated Vision Pro mixed-reality headset will be available in the U.S. starting February 2nd. Pre-orders for the $3,499 device will begin on January 19th. The launch marks Apple\'s most significant new product category since the Apple Watch in 2015 and is expected to heat up the nascent spatial computing market.'
-    },
-    {
-      id: 3,
-      timeAgo: '15 Min.',
-      symbol: 'MSFT',
-      headline: 'Microsoft to invest $2.9 billion in Japan for AI and cloud infrastructure expansion',
-      provider: 'CNBC',
-      sentiment: 'Positive',
-      price: 427.56,
-      change: 1.12,
-      changePercent: 0.26,
-      content: 'Microsoft is set to make its largest-ever investment in Japan, pledging $2.9 billion over the next two years to expand its hyperscale cloud computing and AI infrastructure. The investment aims to meet the growing demand for AI services and to support Japan\'s goal of becoming a leader in the digital economy.'
-    },
-    {
-      id: 4,
-      timeAgo: '30 Min.',
-      symbol: 'GOOGL',
-      headline: 'Google announces new AI features for its Workspace suite to compete with Microsoft Copilot',
-      provider: 'The Verge',
-      sentiment: 'Neutral',
-      price: 139.81,
-      change: 0.45,
-      changePercent: 0.32,
-      content: 'Google has rolled out a new set of generative AI features for its Workspace suite, including tools in Docs, Sheets, and Slides. The move is a direct response to Microsoft\'s Copilot, as the two tech giants vie for dominance in the enterprise productivity software market. The new features will be available to all Workspace customers on a rolling basis.'
-    },
-    {
-      id: 5,
-      timeAgo: '1 H.',
-      symbol: 'AMZN',
-      headline: 'Amazon\'s AWS unit announces price cuts for several key cloud services',
-      provider: 'TechCrunch',
-      sentiment: 'Positive',
-      price: 185.07,
-      change: 1.98,
-      changePercent: 1.08,
-      content: 'Amazon Web Services (AWS), the cloud computing division of Amazon, announced significant price reductions for several of its popular services, including S3 storage and EC2 compute instances. The move is seen as an effort to maintain its market leadership amid increasing competition from Microsoft Azure and Google Cloud.'
-    },
-    {
-        id: 6,
-        timeAgo: '2 H.',
-        symbol: 'NVDA',
-        headline: 'Nvidia unveils new line of GPUs targeted at AI professionals and researchers',
-        provider: 'MarketWatch',
-        sentiment: 'Positive',
-        price: 903.67,
-        change: 12.33,
-        changePercent: 1.38,
-        content: 'Nvidia today took the wraps off its latest generation of graphics processing units (GPUs), the RTX 50-series, with a strong focus on artificial intelligence applications. The new chips promise substantial performance gains for machine learning workloads, a move aimed at solidifying Nvidia\'s dominance in the AI hardware market.'
-    },
-    {
-        id: 7,
-        timeAgo: '3 H.',
-        symbol: 'META',
-        headline: 'Meta to roll out new privacy features for Facebook and Instagram users in Europe',
-        provider: 'Reuters',
-        sentiment: 'Neutral',
-        price: 321.78,
-        change: -0.89,
-        changePercent: -0.28,
-        content: 'In response to regulatory pressure in the European Union, Meta Platforms announced it will be introducing new privacy controls for Facebook and Instagram users in the region. The changes will give users more granular control over how their data is used for targeted advertising, though it remains to be seen if the changes will satisfy EU regulators.'
-    }
-];
 
 const alertsData = [
     { id: 1, asset: 'BTC', condition: 'moves > 5%', active: true },
@@ -178,8 +80,86 @@ const FilterButton = ({ filter }: { filter: { name: string, hasDropdown: boolean
     return buttonContent;
 };
 
+function formatTimeAgo(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    const intervals = [
+        { label: 'Y', seconds: 31536000 },
+        { label: 'M', seconds: 2592000 },
+        { label: 'D', seconds: 86400 },
+        { label: 'H', seconds: 3600 },
+        { label: 'Min.', seconds: 60 },
+        { label: 'Sec.', seconds: 1 }
+    ];
+
+    for (const interval of intervals) {
+        const count = Math.floor(seconds / interval.seconds);
+        if (count >= 1) {
+            return `${count} ${interval.label}`;
+        }
+    }
+    return 'Just now';
+}
+
+function NewsSkeleton() {
+    return (
+        <div className="divide-y divide-border/50">
+            {Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="p-4 space-y-2 md:grid md:grid-cols-[auto_auto_1fr_auto_auto_auto] md:items-center md:gap-x-4 md:space-y-0">
+                    <div className="md:hidden">
+                        <div className="flex justify-between items-center text-sm">
+                            <div className="flex items-baseline gap-2">
+                                <Skeleton className="h-4 w-12" />
+                                <Skeleton className="h-5 w-16" />
+                            </div>
+                            <Skeleton className="h-8 w-8 rounded-full" />
+                        </div>
+                        <Skeleton className="h-5 w-full mt-2" />
+                        <div className="flex items-center justify-between pt-2">
+                            <Skeleton className="h-6 w-24 rounded-full" />
+                            <Skeleton className="h-4 w-20" />
+                        </div>
+                    </div>
+                    <div className="hidden md:grid grid-cols-subgrid col-span-6 items-center">
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-5 w-20" />
+                        <Skeleton className="h-5 flex-1" />
+                        <div className="w-24 flex justify-center">
+                            <Skeleton className="h-6 w-24 rounded-full" />
+                        </div>
+                        <Skeleton className="h-4 w-24" />
+                        <div className="w-8 flex justify-center">
+                            <Skeleton className="h-8 w-8 rounded-full" />
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
 export default function NewsPage() {
-    const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
+    const [articles, setArticles] = useState<EnrichedNewsArticle[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedNews, setSelectedNews] = useState<EnrichedNewsArticle | null>(null);
+
+    useEffect(() => {
+        async function loadNews() {
+            try {
+                setIsLoading(true);
+                const news = await fetchNews();
+                setArticles(news);
+            } catch (error) {
+                console.error("Failed to fetch news:", error);
+                // Optionally: show a toast notification for the error
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        loadNews();
+    }, []);
 
     return (
         <ClientOnly>
@@ -209,60 +189,62 @@ export default function NewsPage() {
                             <span className="text-center">Provider</span>
                             <span className="text-center">Alerts</span>
                         </div>
-                        <div className="divide-y divide-border/50">
-                            {newsData.map((item) => (
-                            <div key={item.id} onClick={() => setSelectedNews(item)} className="cursor-pointer hover:bg-muted/30">
-                                <div className="p-4 space-y-2 md:hidden">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-muted-foreground">{item.timeAgo}</span>
-                                            <span className="font-bold">{item.symbol}</span>
+                        {isLoading ? <NewsSkeleton /> : (
+                            <div className="divide-y divide-border/50">
+                                {articles.map((item, index) => (
+                                <div key={index} onClick={() => setSelectedNews(item)} className="cursor-pointer hover:bg-muted/30">
+                                    <div className="p-4 space-y-2 md:hidden">
+                                        <div className="flex justify-between items-center text-sm">
+                                            <div className="flex items-baseline gap-2">
+                                                <span className="text-muted-foreground">{formatTimeAgo(item.publishedDate)}</span>
+                                                <span className="font-bold">{item.ticker}</span>
+                                            </div>
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground -mr-2">
+                                                <Bell className="h-5 w-5" />
+                                            </Button>
                                         </div>
-                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground -mr-2">
-                                            <Bell className="h-5 w-5" />
-                                        </Button>
+                                        <div className="font-medium text-base leading-snug block">{item.headline}</div>
+                                        <div className="flex items-center justify-between pt-1">
+                                            <Badge
+                                                className={cn(
+                                                    'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
+                                                    sentimentBadgeClasses[item.sentiment]
+                                                )}
+                                                variant="outline"
+                                            >
+                                                {item.sentiment}
+                                            </Badge>
+                                            <span className="text-sm text-muted-foreground">{item.provider}</span>
+                                        </div>
                                     </div>
-                                    <div className="font-medium text-base leading-snug block">{item.headline}</div>
-                                    <div className="flex items-center justify-between pt-1">
-                                        <Badge
-                                            className={cn(
-                                                'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
-                                                sentimentBadgeClasses[item.sentiment]
-                                            )}
-                                            variant="outline"
-                                        >
-                                            {item.sentiment}
-                                        </Badge>
-                                        <span className="text-sm text-muted-foreground">{item.provider}</span>
-                                    </div>
-                                </div>
-                                <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto_auto_auto] items-center gap-x-4 p-4">
-                                    <span className="text-muted-foreground text-sm whitespace-nowrap w-16">{item.timeAgo}</span>
-                                    <span className="font-bold text-sm w-20">{item.symbol}</span>
-                                    <div className="font-medium text-base leading-snug truncate flex-1">
-                                        {item.headline}
-                                    </div>
-                                    <div className="w-24 flex justify-center">
-                                        <Badge
-                                            className={cn(
-                                                'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
-                                                sentimentBadgeClasses[item.sentiment]
-                                            )}
-                                            variant="outline"
-                                        >
-                                            {item.sentiment}
-                                        </Badge>
-                                    </div>
-                                    <span className="text-sm text-muted-foreground w-24 text-center">{item.provider}</span>
-                                    <div className="w-8 flex justify-center">
-                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                                            <Bell className="h-5 w-5" />
-                                        </Button>
+                                    <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto_auto_auto] items-center gap-x-4 p-4">
+                                        <span className="text-muted-foreground text-sm whitespace-nowrap w-16">{formatTimeAgo(item.publishedDate)}</span>
+                                        <span className="font-bold text-sm w-20">{item.ticker}</span>
+                                        <div className="font-medium text-base leading-snug truncate flex-1">
+                                            {item.headline}
+                                        </div>
+                                        <div className="w-24 flex justify-center">
+                                            <Badge
+                                                className={cn(
+                                                    'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
+                                                    sentimentBadgeClasses[item.sentiment]
+                                                )}
+                                                variant="outline"
+                                            >
+                                                {item.sentiment}
+                                            </Badge>
+                                        </div>
+                                        <span className="text-sm text-muted-foreground w-24 text-center">{item.provider}</span>
+                                        <div className="w-8 flex justify-center">
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                                                <Bell className="h-5 w-5" />
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
+                                ))}
                             </div>
-                            ))}
-                        </div>
+                        )}
                         </div>
                     </TabsContent>
 
@@ -306,21 +288,10 @@ export default function NewsPage() {
                                     <DialogTitle className="text-2xl lg:text-3xl font-bold leading-tight">{selectedNews.headline}</DialogTitle>
                                 </DialogHeader>
                                 <div className="flex items-center gap-4 py-2 border-b border-t border-border/50">
-                                    <Badge variant="secondary" className="font-bold text-base py-1 px-3">{selectedNews.symbol}</Badge>
-                                    <div className="text-xl font-semibold">
-                                        ${selectedNews.price.toFixed(2)}
-                                    </div>
-                                    <div className={cn(
-                                        "text-base font-medium flex items-center gap-1",
-                                        selectedNews.change >= 0 ? 'text-chart-positive' : 'text-chart-negative'
-                                    )}>
-                                        {selectedNews.change >= 0 ? '▲' : '▼'}
-                                        <span>{selectedNews.change >= 0 ? '+' : ''}{selectedNews.change.toFixed(2)}</span>
-                                        <span>({selectedNews.change >= 0 ? '+' : ''}{selectedNews.changePercent.toFixed(2)}%)</span>
-                                    </div>
+                                    <Badge variant="secondary" className="font-bold text-base py-1 px-3">{selectedNews.ticker}</Badge>
                                 </div>
                                 <div className="text-muted-foreground leading-relaxed max-h-[50vh] overflow-y-auto pr-2">
-                                    {selectedNews.content}
+                                    {selectedNews.description}
                                 </div>
                                 <DialogFooter className="!justify-end mt-4">
                                     <Button variant="outline" onClick={() => setSelectedNews(null)}>Close</Button>
